@@ -24,6 +24,5 @@
   <ItemGroup>
     <Folder Include="DbAccess\" />
     <Folder Include="Data\" />
-    <Folder Include="Views\Category\" />
   </ItemGroup>
 </Project>

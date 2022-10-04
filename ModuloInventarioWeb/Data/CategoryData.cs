@@ -13,6 +13,7 @@ public class CategoryData : ICategoryData
         _db = db;
     }
 
+
     public Task<IEnumerable<Category>> GetCategories()
     {
         return _db.LoadData<Category, dynamic>("SPCategory_GetAll", new { });
@@ -25,6 +26,24 @@ public class CategoryData : ICategoryData
         var results = await _db.LoadData<Category, dynamic>("SPCategory_GetById", new { id });
 
         return results.FirstOrDefault();
+    }
+
+    public Task InsertCategory(Category category)
+    {
+        var results = _db.SaveData("SPCategory_Insert", new { category.Name, category.DisplayOrder });
+        return results;
+    }
+
+    public Task UpdateCategory(Category category)
+    {
+        var results = _db.SaveData("SPCategory_Update", new { category.Id, category.Name, category.DisplayOrder });
+        return results;
+    }
+
+    public Task DeleteCategory(int id)
+    {
+        var results = _db.SaveData("SPCategory_Delete", new { id });
+        return results;
     }
 }
 

@@ -6,5 +6,9 @@ namespace ModuloInventarioWeb.Data
     {
         Task<IEnumerable<Category>> GetCategories();
         Task<Category?> GetCategory(int id);
+
+        Task InsertCategory(Category category);
+        Task UpdateCategory(Category category);
+        Task DeleteCategory(int id);
     }
 }
