@@ -33,18 +33,86 @@ public class CategoryController : Controller
 
     }
 
-    public async Task<IActionResult> Edit(int id)
+    public async Task<IActionResult> Create()
+    {
+        return View();
+    }
+
+    // POST
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Category category)
     {
         try
         {
-            var obj = await _data.GetCategory(id);
+            if (ModelState.IsValid)
+            {
+                await _data.InsertCategory(category);
+                TempData["success"] = "Category created successfully";
+                return RedirectToAction("Index");
+            }
+
+            return View(category);
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = ex.Message;
+            return View(category);
+        }
+    }
+
+    public async Task<IActionResult> Edit(int? id)
+    {
+
+        if (id is 0 or null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            var obj = await _data.GetCategory((int)id);
+            
+            if (obj is null)
+                return NotFound();
+            
             return View(obj);
         }
         catch (Exception ex)
         {
             return NotFound(ex.Message);
         }
+    }
 
+    [HttpPost]
+    public async Task<IActionResult> Edit(Category category)
+    {
+        try
+        {
+            await _data.UpdateCategory(category);
+            TempData["success"] = "Category updated successfully";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = ex.Message;
+            return View(category);
+        }
+    }
+
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            await _data.DeleteCategory(id);
+            TempData["success"] = "Category deleted successfully";
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            TempData["error"] = ex.Message;
+            return RedirectToAction("Index");
+        }
     }
 }
 
