@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModuloInventarioWeb.Data;
 using ModuloInventarioWeb.Models;
 
 namespace ModuloInventarioWeb.Controllers;
 
+[Authorize]
 public class CategoryController : Controller
 {
     private readonly ICategoryData _data;
@@ -33,7 +35,7 @@ public class CategoryController : Controller
 
     }
 
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
         return View();
     }
