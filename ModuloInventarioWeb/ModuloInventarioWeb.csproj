@@ -14,15 +14,19 @@
     <None Remove="Data\" />
     <None Remove="Views\Category\" />
     <None Remove="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
+    <None Remove="Views\Movimiento\" />
+    <None Remove="Views\Autenticacion\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.9" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DbAccess\" />
     <Folder Include="Data\" />
+    <Folder Include="Views\Movimiento\" />
+    <Folder Include="Views\Autenticacion\" />
   </ItemGroup>
 </Project>

@@ -19,8 +19,6 @@ public class CategoryData : ICategoryData
         return _db.LoadData<Category, dynamic>("SPCategory_GetAll", new { });
     }
 
-    //public Task<IEnumerable<Category>> GetCategories() => _db.LoadData<Category, dynamic>("SPCategory_GetAll", new { });
-
     public async Task<Category?> GetCategory(int id)
     {
         var results = await _db.LoadData<Category, dynamic>("SPCategory_GetById", new { id });

@@ -2,31 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModuloInventarioWeb.Data;
 using ModuloInventarioWeb.Models;
 
 namespace ModuloInventarioWeb.Controllers;
 
-[Authorize]
-public class CategoryController : Controller
+public class RolController : Controller
 {
-    private readonly ICategoryData _data;
+    private readonly IRolData _data;
 
-    public CategoryController(ICategoryData data)
+    public RolController(IRolData data)
     {
         _data = data;
     }
-
-
-    // GET: /<controller>/
     public async Task<IActionResult> Index()
     {
         try
         {
-            IEnumerable<Category> objCategoryList = await _data.GetCategories();
-            return View(objCategoryList);
+            IEnumerable<Rol> objRolList = await _data.GetRol();
+            return View(objRolList);
         }
         catch (Exception ex)
         {
@@ -35,7 +30,7 @@ public class CategoryController : Controller
 
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
         return View();
     }
@@ -43,41 +38,41 @@ public class CategoryController : Controller
     // POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Category category)
+    public async Task<IActionResult> Create(Rol rol)
     {
         try
         {
             if (ModelState.IsValid)
             {
-                await _data.InsertCategory(category);
-                TempData["success"] = "Category created successfully";
+                await _data.InsertRol(rol);
+                TempData["success"] = "Rol created successfully";
                 return RedirectToAction("Index");
             }
 
-            return View(category);
+            return View(rol);
         }
         catch (Exception ex)
         {
             TempData["error"] = ex.Message;
-            return View(category);
+            return View(rol);
         }
     }
 
-    public async Task<IActionResult> Edit(int? id)
+    public async Task<IActionResult> Edit(int? ID_Rol)
     {
 
-        if (id is 0 or null)
+        if (ID_Rol is 0 or null)
         {
             return NotFound();
         }
 
         try
         {
-            var obj = await _data.GetCategory((int)id);
-            
+            var obj = await _data.GetRol((int)ID_Rol);
+
             if (obj is null)
                 return NotFound();
-            
+
             return View(obj);
         }
         catch (Exception ex)
@@ -87,18 +82,18 @@ public class CategoryController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(Category category)
+    public async Task<IActionResult> Edit(Rol rol)
     {
         try
         {
-            await _data.UpdateCategory(category);
-            TempData["success"] = "Category updated successfully";
+            await _data.UpdateRol(rol);
+            TempData["success"] = "Rol updated successfully";
             return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
             TempData["error"] = ex.Message;
-            return View(category);
+            return View(rol);
         }
     }
 
@@ -106,8 +101,8 @@ public class CategoryController : Controller
     {
         try
         {
-            await _data.DeleteCategory(id);
-            TempData["success"] = "Category deleted successfully";
+            await _data.DeleteRol(id);
+            TempData["success"] = "Rol deleted successfully";
             return RedirectToAction("Index");
         }
         catch (Exception ex)
@@ -116,5 +111,5 @@ public class CategoryController : Controller
             return RedirectToAction("Index");
         }
     }
-}
 
+}
