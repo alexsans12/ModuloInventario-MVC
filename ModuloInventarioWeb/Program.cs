@@ -10,6 +10,10 @@ builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddSingleton<ICategoryData, CategoryData>();
 builder.Services.AddSingleton<IDetalleMovimientoData, DetalleMovimientoData>();
 builder.Services.AddSingleton<IMovimientoData, MovimientoData>();
+builder.Services.AddSingleton<ICategoriaData, CategoriaData>();
+builder.Services.AddSingleton<IRolData, RolData>();
+builder.Services.AddSingleton<IUsuarioData, UsuarioData>();
+builder.Services.AddSingleton<IProductoData, ProductoData>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -26,7 +30,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
