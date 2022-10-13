@@ -15,7 +15,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ModuloInventarioWeb</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Modulo Inventario</a>
                 <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target=".sidebar" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -35,10 +35,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated) {
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Autenticacion" asp-action="Salir">Salir</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Movimiento" asp-action="Index">Movimientos</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Autenticacion" asp-action="Salir">Salir</a>
+                            </li>
                         }
                     </ul>
                 </div>

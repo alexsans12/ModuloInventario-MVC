@@ -5,7 +5,7 @@ namespace ModuloInventarioWeb.Data
     public interface IUsuarioData
     {
         Task<IEnumerable<Usuario>> GetUsuario();
-        Task<Usuario?> GetUsuario(int ID_Usuario);
+        Task<Usuario?> GetUsuario(int Id);
 
         Task InsertUsuario(Usuario usuario);
         Task UpdateUsuario(Usuario usuario);

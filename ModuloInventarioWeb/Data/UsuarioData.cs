@@ -18,9 +18,9 @@ public class UsuarioData : IUsuarioData
         return _db.LoadData<Usuario, dynamic>("SPCategory_GetAll", new { });
     }
 
-    public async Task<Usuario?> GetUsuario(int ID_Usuario)
+    public async Task<Usuario?> GetUsuario(int Id)
     {
-        var results = await _db.LoadData<Usuario, dynamic>("SPCategory_GetById", new { ID_Usuario });
+        var results = await _db.LoadData<Usuario, dynamic>("SPUsuario_Obtener", new { Id });
 
         return results.FirstOrDefault();
     }

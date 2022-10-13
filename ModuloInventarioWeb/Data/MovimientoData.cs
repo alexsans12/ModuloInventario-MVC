@@ -34,16 +34,16 @@ public class MovimientoData : IMovimientoData
         return results;
     }
 
-    public async Task<Movimiento?> ObtenerPorId(int id)
+    public async Task<Movimiento?> ObtenerPorId(int Id)
     {
-        var results = await _db.LoadData<Movimiento, dynamic>("SPCategory_GetById", new { id });
+        var results = await _db.LoadData<Movimiento, dynamic>("SPMovimiento_Obtener", new { Id });
 
         return results.FirstOrDefault();
     }
 
     public Task<IEnumerable<Movimiento>> ObtenerTodos()
     {
-        return _db.LoadData<Movimiento, dynamic>("SPMovimiento_Consultar", new { });
+        return _db.LoadData < Movimiento, dynamic>("SPMovimiento_Obtener", new { Id = 0 });
     }
 }
 
