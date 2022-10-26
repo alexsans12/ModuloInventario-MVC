@@ -28,7 +28,7 @@ namespace ModuloInventarioWeb.Controllers;
                 return NotFound(ex.Message);
             }
         }
-        public async Task<IActionResult> Create()
+        public  IActionResult Create()
         {
             return View();
         }
@@ -43,7 +43,7 @@ namespace ModuloInventarioWeb.Controllers;
                 if (ModelState.IsValid)
                 {
                     await _data.InsertCategoria(categoria);
-                    TempData["success"] = "Category created successfully";
+                    TempData["success"] = "Categoria created successfully";
                     return RedirectToAction("Index");
                 }
 
@@ -56,17 +56,17 @@ namespace ModuloInventarioWeb.Controllers;
             }
         }
 
-    public async Task<IActionResult> Edit(int? ID_Categoria)
+    public async Task<IActionResult> Edit(int? id)
     {
 
-        if (ID_Categoria is 0 or null)
+        if (id is 0 or null)
         {
             return NotFound();
         }
 
         try
         {
-            var obj = await _data.GetCategoria((int)ID_Categoria);
+            var obj = await _data.GetCategoria((int)id);
 
             if (obj is null)
                 return NotFound();
@@ -95,11 +95,11 @@ namespace ModuloInventarioWeb.Controllers;
         }
     }
 
-    public async Task<IActionResult> Delete(int ID_Categoria)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            await _data.DeleteCategoria(ID_Categoria);
+            await _data.DeleteCategoria(id);
             TempData["success"] = "Category deleted successfully";
             return RedirectToAction("Index");
         }

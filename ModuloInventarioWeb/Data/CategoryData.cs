@@ -16,12 +16,12 @@ public class CategoryData : ICategoryData
 
     public Task<IEnumerable<Category>> GetCategories()
     {
-        return _db.LoadData<Category, dynamic>("SPCategory_GetAll", new { });
+        return _db.LoadData<Category, dynamic>("SPCategoria_GetAll", new { });
     }
 
     public async Task<Category?> GetCategory(int id)
     {
-        var results = await _db.LoadData<Category, dynamic>("SPCategory_GetById", new { id });
+        var results = await _db.LoadData<Category, dynamic>("SPCategoria_GetById", new { id });
 
         return results.FirstOrDefault();
     }
