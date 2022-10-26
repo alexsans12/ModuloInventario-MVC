@@ -2,6 +2,13 @@
 
 @{
     ViewData["Title"] = "Movimientos";
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if(ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
 }
 
 <div class="container p-3">
@@ -13,7 +20,6 @@
             <a asp-controller="Movimiento" asp-action="Crear" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
         </div>
     </div>
-
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -30,15 +36,15 @@
                 <tr>
                     @if (obj.TipoMovimiento)
                     {
-                        <td style="width=50%">Entrada</td>
+                        <td style="width=50%">Salida</td>
                     }
                     else
                     {
-                        <td style="width=50%">Salida</td>
+                        <td style="width=50%">Entrada</td>
                     }
                     <td style="width=30%">@obj.FechaCreacion</td>
                     <td style="width=30%">@obj.Descripcion</td>
-                    <td style="width=30%">@obj.Usuario.Nombre</td>
+                    <td style="width=30%">Usuario</td>
                     <td class="text-center">
                         <div class="btn-group" role="group">
                             <a class="btn btn-primary" asp-action="Ver" asp-route-id="@obj.Id"><i class="bi bi-eye"></i></a>
@@ -50,4 +56,17 @@
             }
         </tbody>
     </table>
+    <div class="container">
+        @if(pager.TotalPages > 0)
+        {
+            <ul class="pagination justify-content-end">
+                @for(var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                {
+                    <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-controller="Movimiento" asp-action="Index" asp-route-pg="@pge">@pge</a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
 </div>

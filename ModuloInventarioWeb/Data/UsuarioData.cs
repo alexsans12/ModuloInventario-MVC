@@ -27,21 +27,26 @@ public class UsuarioData : IUsuarioData
 
     public Task InsertUsuario(Usuario usuario)
     {
-        var results = _db.SaveData("SPCategory_Insert", new { usuario.ID_Usuario, usuario.Nombre, usuario.Contrasena, usuario.Foto_Perfil });
+        var results = _db.SaveData("SPCategory_Insert", new { Id = usuario.Id_Usuario, usuario.Nombre, usuario.Contrasena, usuario.Foto_Perfil });
         return results;
     }
 
     public Task UpdateUsuario(Usuario usuario)
     {
-        var results = _db.SaveData("SPCategory_Update", new { usuario.ID_Usuario, usuario.Nombre, usuario.Contrasena, usuario.Foto_Perfil });
+        var results = _db.SaveData("SPUsuario_Update", new { Id = usuario.Id_Usuario, usuario.Nombre, usuario.Contrasena, usuario.Foto_Perfil });
         return results;
     }
 
     public Task DeleteUsuario(Usuario usuario)
     {
-        var results = _db.SaveData("SPCategory_Delete", new { usuario.ID_Usuario });
+        var results = _db.SaveData("SPCategory_Delete", new { usuario.Id_Usuario });
         return results;
     }
 
-   
+    public async Task<Usuario?> ObtenerPorNombre(String nombre)
+    {
+        var results = await _db.LoadData<Usuario, dynamic>("SPUsuario_ObtenerPorNombre", new { nombre });
+
+        return results.FirstOrDefault();
+    }
 }
