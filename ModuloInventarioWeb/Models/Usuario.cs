@@ -6,7 +6,7 @@ namespace ModuloInventarioWeb.Models;
 public class Usuario
 {
     [Key]
-    public int Id_Usuario { get; set; }
+    public int ID_Usuario { get; set; }
     public string Nombre { get; set; }
     public byte[] Contrasena { get; set; }
     public byte[]? Foto_Perfil { get; set; }

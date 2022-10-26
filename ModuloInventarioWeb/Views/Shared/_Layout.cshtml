@@ -44,10 +44,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Producto" asp-action="Index">Producto</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated) {
+                        @if (User.Identity.IsAuthenticated)
+                        {
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Movimiento" asp-action="Index">Movimientos</a>
                             </li>
+                        }
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">

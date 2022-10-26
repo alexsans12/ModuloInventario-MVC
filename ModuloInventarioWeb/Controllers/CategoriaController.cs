@@ -16,12 +16,24 @@ namespace ModuloInventarioWeb.Controllers;
         {
             _data = data;
         }
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(int pg = 1)
         {
             try
             {
                 IEnumerable<Categoria> objCategoriaList = await _data.GetCategoria();
-                return View(objCategoriaList);
+                const int pageSize = 9;
+
+                if (pg < 1) pg = 1;
+
+                int recsCount = objCategoriaList.Count();
+                var pager = new Pager(recsCount, pg, pageSize);
+                int recSkip = (pg - 1) * pageSize;
+                var data = objCategoriaList.Skip(recSkip).Take(pager.PageSize);
+
+                ViewBag.Pager = pager;
+
+            return View(data);
             }
             catch (Exception ex)
             {

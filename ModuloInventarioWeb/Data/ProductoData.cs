@@ -27,13 +27,13 @@ public class ProductoData : IProductoData
 
     public Task InsertProducto(Producto producto)
     {
-        var results = _db.SaveData("SPProducto_Insertar", new { producto.Codigo, producto.Nombre, producto.Descripcion, producto.Stock, producto.Precio_Entrada, producto.Imagen_Producto, ID_Categoria = producto.IDCategoria });
+        var results = _db.SaveData("SPProducto_Insertar", new { producto.Codigo, producto.Nombre, producto.Descripcion, producto.Stock, producto.Precio, producto.Imagen_Producto, ID_Categoria = producto.IDCategoria });
         return results;
     }
 
     public Task UpdateProducto(Producto producto)
     {
-        var results = _db.SaveData("SPProducto_Actualizar", new { producto.ID_Producto, producto.Codigo, producto.Nombre, producto.Descripcion, producto.Stock, producto.Precio_Entrada, producto.Imagen_Producto, ID_Categoria = producto.IDCategoria });
+        var results = _db.SaveData("SPProducto_Actualizar", new { producto.ID_Producto, producto.Codigo, producto.Nombre, producto.Descripcion, producto.Stock, producto.Precio, producto.Imagen_Producto, ID_Categoria = producto.IDCategoria });
         return results;
     }
 
