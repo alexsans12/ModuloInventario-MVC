@@ -1,4 +1,7 @@
 ﻿using System;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using System.Data;
 using ModuloInventarioWeb.DbAccess;
 using ModuloInventarioWeb.Models;
 
@@ -7,10 +10,12 @@ namespace ModuloInventarioWeb.Data;
 public class MovimientoData : IMovimientoData
 {
     private readonly ISqlDataAccess _db;
+    private readonly IConfiguration _configuration;
 
-    public MovimientoData(ISqlDataAccess db)
+    public MovimientoData(ISqlDataAccess db, IConfiguration configuration)
     {
         _db = db;
+        _configuration = configuration;
     }
 
     public Task Actualizar(Movimiento movimiento)
@@ -27,23 +32,32 @@ public class MovimientoData : IMovimientoData
         return results;
     }
 
-    public Task Insertar(Movimiento movimiento)
+    public async Task<int> Insertar(Movimiento movimiento)
     {
-        var results = _db.SaveData("SPMovimiento_Guardar", new { movimiento.IdUsuario });
+        var mov = new DynamicParameters();
+        mov.Add("@Id", 0, DbType.Int32, ParameterDirection.Output);
+        mov.Add("@TipoMovimiento", movimiento.TipoMovimiento);
+        mov.Add("@Descripcion", movimiento.Descripcion);
+        mov.Add("@Total", movimiento.Total);
+        mov.Add("@IdUsuario", movimiento.IdUsuario);
 
-        return results;
+        using IDbConnection connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnectionString"));
+
+        var results = connection.Query<int>("SPMovimiento_Insertar", mov, commandType: CommandType.StoredProcedure);
+
+        return mov.Get<int>("@Id");
     }
 
-    public async Task<Movimiento?> ObtenerPorId(int id)
+    public async Task<Movimiento?> ObtenerPorId(int Id)
     {
-        var results = await _db.LoadData<Movimiento, dynamic>("SPCategory_GetById", new { id });
+        var results = await _db.LoadData<Movimiento, dynamic>("SPMovimiento_Obtener", new { Id });
 
         return results.FirstOrDefault();
     }
 
     public Task<IEnumerable<Movimiento>> ObtenerTodos()
     {
-        return _db.LoadData<Movimiento, dynamic>("SPMovimiento_Consultar", new { });
+        return _db.LoadData<Movimiento, dynamic>("SPMovimiento_Obtener", new { Id = 0 });
     }
 }
 

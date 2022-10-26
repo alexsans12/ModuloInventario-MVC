@@ -16,6 +16,7 @@
     <None Remove="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
     <None Remove="Views\Movimiento\" />
     <None Remove="Views\Autenticacion\" />
+    <None Remove="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
@@ -28,5 +29,6 @@
     <Folder Include="Data\" />
     <Folder Include="Views\Movimiento\" />
     <Folder Include="Views\Autenticacion\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

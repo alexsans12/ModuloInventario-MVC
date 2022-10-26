@@ -1,13 +1,31 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace ModuloInventarioWeb.Models;
 
 public class Movimiento
 {
+    [Key]
     public int Id { get; set; }
-    public DateTime FechaCreacion { get; set; }
+
+    [Required]
+    [DataType(DataType.Date)]
+    public DateTime FechaCreacion { get; set; } = DateTime.Now.Date;
     public bool TipoMovimiento { get; set; }
+
+    [Required]
     public String Descripcion { get; set; }
+
+    [Required]
     public double Total { get; set; }
-    public int IdUsuario { get; set; } // Agregar la clase usuario cuando ya este creada
+
+    [Required]
+    [ForeignKey("Usuario")]
+    public int IdUsuario { get; set; }
+
+    public virtual Usuario Usuario { get; set; }
+
+    [Required]
+    public virtual List<DetalleMovimiento>? Detalles { get; set; }
 }
 

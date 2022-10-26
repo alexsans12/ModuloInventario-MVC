@@ -13,18 +13,18 @@ public class SqlDataAccess : ISqlDataAccess
         this._configuration = configuration;
     }
 
-    public async Task<IEnumerable<T>> LoadData<T, U>(string storedProcedure, U parameters, string connectionId = "EddyConexion")
+    public async Task<IEnumerable<T>> LoadData<T, U>(string storedProcedure, U parameters, string connectionId = "DefaultConnectionString")
     {
         using IDbConnection connection = new SqlConnection(_configuration.GetConnectionString(connectionId));
 
         return await connection.QueryAsync<T>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
     }
 
-    public async Task SaveData<T>(string storedProcedure, T parameters, string connectionId = "EddyConexion")
+    public async Task SaveData<T>(string storedProcedure, T parameters, string connectionId = "DefaultConnectionString")
     {
         using IDbConnection connection = new SqlConnection(_configuration.GetConnectionString(connectionId));
 
-        await connection.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+        await connection.QueryAsync<T>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
     }
 }
 

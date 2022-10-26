@@ -30,6 +30,7 @@ body {
     background-color: rgba(105,105,105,1);
     text-align: end;
     padding: 1rem;
+    z-index: 100;
 }
 
 

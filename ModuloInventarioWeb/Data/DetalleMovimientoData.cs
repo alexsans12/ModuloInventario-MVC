@@ -29,7 +29,7 @@ public class DetalleMovimientoData : IDetalleMovimientoData
 
     public Task Insertar(DetalleMovimiento detalleMovimiento)
     {
-        var results = _db.SaveData("SPDetalleMovimiento_Guardar", new { detalleMovimiento.IdMovimiento });
+        var results = _db.SaveData("SPDetalleMovimiento_Insertar", new { detalleMovimiento.IdMovimiento, detalleMovimiento.IdProducto, detalleMovimiento.Cantidad, detalleMovimiento.PrecioUnidad, detalleMovimiento.Subtotal });
 
         return results;
     }

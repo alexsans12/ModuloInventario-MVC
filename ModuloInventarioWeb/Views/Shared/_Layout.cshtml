@@ -15,7 +15,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ModuloInventarioWeb</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Modulo Inventario</a>
                 <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target=".sidebar" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -45,9 +45,14 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Producto" asp-action="Index">Producto</a>
                         </li>
                         @if (User.Identity.IsAuthenticated) {
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Autenticacion" asp-action="Salir">Salir</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Movimiento" asp-action="Index">Movimientos</a>
+                            </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Autenticacion" asp-action="Salir">Salir</a>
+                            </li>
                         }
                     </ul>
                 </div>
@@ -70,6 +75,8 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
 </body>
 </html>
 
