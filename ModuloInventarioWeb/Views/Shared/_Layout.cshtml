@@ -36,8 +36,18 @@
                             <a class="nav-link text-light" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Movimiento" asp-action="Index">Movimientos</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Categoria" asp-action="Index">Categoria</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Usuario" asp-action="Index">Usuario</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Producto" asp-action="Index">Producto</a>
+                        </li>
+                        @if (User.Identity.IsAuthenticated) {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Movimiento" asp-action="Index">Movimientos</a>
+                            </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">

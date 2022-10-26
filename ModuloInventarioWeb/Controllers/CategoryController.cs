@@ -9,7 +9,7 @@ using ModuloInventarioWeb.Models;
 
 namespace ModuloInventarioWeb.Controllers;
 
-[Authorize]
+
 public class CategoryController : Controller
 {
     private readonly ICategoryData _data;

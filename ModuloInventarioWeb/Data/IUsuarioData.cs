@@ -9,6 +9,6 @@ namespace ModuloInventarioWeb.Data
         Task<Usuario?> ObtenerPorNombre(String nombre);
         Task InsertUsuario(Usuario usuario);
         Task UpdateUsuario(Usuario usuario);
-        Task DeleteUsuario(Usuario ID_Usuario);
+        Task DeleteUsuario(int ID_Usuario);
     }
 }

@@ -15,31 +15,31 @@ public class ProductoData : IProductoData
 
     public Task<IEnumerable<Producto>> GetProducto()
     {
-        return _db.LoadData<Producto, dynamic>("SPProducto_Obtener", new { });
+        return _db.LoadData<Producto, dynamic>("SPProducto_GetAll", new { });
     }
 
     public async Task<Producto?> GetProducto(int ID_Producto)
     {
-        var results = await _db.LoadData<Producto, dynamic>("SPProducto_Obtener", new { ID_Producto });
+        var results = await _db.LoadData<Producto, dynamic>("SPProducto_GetById", new { ID_Producto });
 
         return results.FirstOrDefault();
     }
 
     public Task InsertProducto(Producto producto)
     {
-        var results = _db.SaveData("SPCategory_Insert", new { producto.Codigo, producto.Nombre, producto.Descripcion, producto.Stock, producto.Precio, });
+        var results = _db.SaveData("SPProducto_Insertar", new { producto.Codigo, producto.Nombre, producto.Descripcion, producto.Stock, producto.Precio_Entrada, producto.Imagen_Producto, ID_Categoria = producto.IDCategoria });
         return results;
     }
 
     public Task UpdateProducto(Producto producto)
     {
-        var results = _db.SaveData("SPCategory_Update", new { producto.ID_Producto, producto.Codigo, producto.Descripcion,producto.ID_Categoria, producto.Stock, producto.Precio, producto.Imagen_Producto });
+        var results = _db.SaveData("SPProducto_Actualizar", new { producto.ID_Producto, producto.Codigo, producto.Nombre, producto.Descripcion, producto.Stock, producto.Precio_Entrada, producto.Imagen_Producto, ID_Categoria = producto.IDCategoria });
         return results;
     }
 
     public Task DeleteProducto(int ID_Producto)
     {
-        var results = _db.SaveData("SPCategory_Delete", new { ID_Producto });
+        var results = _db.SaveData("SPProducto_Eliminar", new { ID_Producto });
         return results;
     }
 

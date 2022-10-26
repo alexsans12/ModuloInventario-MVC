@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ModuloInventarioWeb.Data;
 using ModuloInventarioWeb.Models;
-
-
+using static System.Net.Mime.MediaTypeNames;
 namespace ModuloInventarioWeb.Controllers;
 
 public class UsuarioController : Controller
@@ -29,7 +28,7 @@ public class UsuarioController : Controller
             return NotFound(ex.Message);
         }
     }
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
         return View();
     }
@@ -41,8 +40,14 @@ public class UsuarioController : Controller
     {
         try
         {
+            IFormFile imagen = Request.Form.Files[0];
+            var filestream = imagen.OpenReadStream();
+            byte[] data = new byte[filestream.Length];
+            filestream.Read(data, 0, data.Length);
+        
             if (ModelState.IsValid)
             {
+                usuario.Foto_Perfil = data;
                 await _data.InsertUsuario(usuario);
                 TempData["success"] = "Usuario created successfully";
                 return RedirectToAction("Index");
@@ -57,17 +62,18 @@ public class UsuarioController : Controller
         }
     }
 
-    public async Task<IActionResult> Edit(int? ID_Usuario)
+    public async Task<IActionResult> Edit(int? id)
     {
 
-        if (ID_Usuario is 0 or null)
+        if (id is 0 or null)
         {
             return NotFound();
         }
 
         try
         {
-            var obj = await _data.GetUsuario((int)ID_Usuario);
+           
+            var obj = await _data.GetUsuario((int)id);
 
             if (obj is null)
                 return NotFound();
@@ -85,6 +91,12 @@ public class UsuarioController : Controller
     {
         try
         {
+            IFormFile imagen = Request.Form.Files[0];
+            var filestream = imagen.OpenReadStream();
+            byte[] data = new byte[filestream.Length];
+            filestream.Read(data, 0, data.Length);
+
+            usuario.Foto_Perfil = data;
             await _data.UpdateUsuario(usuario);
             TempData["success"] = "Usuario updated successfully";
             return RedirectToAction("Index");
@@ -96,11 +108,13 @@ public class UsuarioController : Controller
         }
     }
 
-    public async Task<IActionResult> Delete(Usuario usuario)
+    public async Task<IActionResult> Delete(int id)
     {
         try
         {
-            await _data.DeleteUsuario(usuario);
+
+
+            await _data.DeleteUsuario(id);
             TempData["success"] = "Usuario deleted successfully";
             return RedirectToAction("Index");
         }
@@ -109,5 +123,15 @@ public class UsuarioController : Controller
             TempData["error"] = ex.Message;
             return RedirectToAction("Index");
         }
+    }
+
+    public async Task<IActionResult> ObtenerImagen(int id)
+    {
+        Usuario usuario = await _data.GetUsuario(id);
+
+        byte[] imagen = usuario.Foto_Perfil;
+
+        MemoryStream memoryStream = new MemoryStream(imagen);
+        return null;
     }
 }

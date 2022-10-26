@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Usuario>
+@{
+    ViewData["Title"] = "Listado de Usuarios";
+}
+<div class="container p-3">
+    <div class="row pt-4 mb-5">
+        <div class="col-6">
+            <h2 class="text-primary">Listado de usuarios</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Usuario" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Crear una nuevo usuario</a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+               
+                <th>Foto de Perfil</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                var imgsrc = "";
+                if(obj.Foto_Perfil!= null){
+
+                    var base64 = Convert.ToBase64String(obj.Foto_Perfil);
+                    imgsrc = String.Format("data:image/jpeg;base64,{0}", base64);
+                }
+                
+                   
+                
+                <tr>
+                    <td style="width=30%">@obj.Nombre</td>
+                   
+                    <td style="width=50%"><img style="max-width:150px" src="@imgsrc"></td>
+                    <td class="text-center">
+                        <div class="w-75 btn-group" role="group">
+                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Usuario"><i class="bi bi-pencil-square"></i> </a>
+                            <a class="btn btn-warning" asp-action="Delete" asp-route-id="@obj.ID_Usuario"><i class="bi bi-trash3"></i> </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
