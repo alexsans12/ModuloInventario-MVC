@@ -55,7 +55,7 @@ namespace ModuloInventarioWeb.Controllers;
                 if (ModelState.IsValid)
                 {
                     await _data.InsertCategoria(categoria);
-                    TempData["success"] = "Categoria created successfully";
+                    TempData["success"] = "Categoría creada exitosamente";
                     return RedirectToAction("Index");
                 }
 
@@ -97,7 +97,7 @@ namespace ModuloInventarioWeb.Controllers;
         try
         {
             await _data.UpdateCategoria(categoria);
-            TempData["success"] = "Category updated successfully";
+            TempData["success"] = "Categoría actualizada exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)
@@ -112,7 +112,7 @@ namespace ModuloInventarioWeb.Controllers;
         try
         {
             await _data.DeleteCategoria(id);
-            TempData["success"] = "Category deleted successfully";
+            TempData["success"] = "Categoría eliminada exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)

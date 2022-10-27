@@ -20,14 +20,14 @@ public class MovimientoData : IMovimientoData
 
     public Task Actualizar(Movimiento movimiento)
     {
-        var results = _db.SaveData("SPMovimiento_Actualizar", new { movimiento.Id });
+        var results = _db.SaveData("SPMovimiento_Actualizar", new { movimiento.Id, Fecha = movimiento.FechaCreacion, Tipo_Movimiento = movimiento.TipoMovimiento, movimiento.Descripcion, movimiento.Total, Id_Usuario = movimiento.IdUsuario });
 
         return results;
     }
 
     public Task Borrar(int id)
     {
-        var results = _db.SaveData("SPMovimiento_Borrar", new { id });
+        var results = _db.SaveData("SPMovimiento_Eliminar", new { id });
 
         return results;
     }
@@ -36,6 +36,7 @@ public class MovimientoData : IMovimientoData
     {
         var mov = new DynamicParameters();
         mov.Add("@Id", 0, DbType.Int32, ParameterDirection.Output);
+        mov.Add("@Fecha", movimiento.FechaCreacion);
         mov.Add("@TipoMovimiento", movimiento.TipoMovimiento);
         mov.Add("@Descripcion", movimiento.Descripcion);
         mov.Add("@Total", movimiento.Total);

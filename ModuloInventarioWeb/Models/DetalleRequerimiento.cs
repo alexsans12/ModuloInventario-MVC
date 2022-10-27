@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModuloInventarioWeb.Models;
 
-public class DetalleMovimiento
+public class DetalleRequerimiento
 {
     [Required]
-    [ForeignKey("Movimiento")]
-    public int IdMovimiento { get; set; }
+    [ForeignKey("Requerimiento")]
+    public int IdRequerimiento { get; set; }
 
     [Required]
     [ForeignKey("Producto")]
-    public int IdProducto { get; set; } // Agregar la clase producto cuando ya este creada
+    public int IdProducto { get; set; }
 
     [Required]
     public int Cantidad { get; set; }
@@ -23,6 +23,5 @@ public class DetalleMovimiento
     [Required]
     public double Subtotal { get; set; }
 
-    public virtual Producto Producto { get; set; }
+    public virtual Producto? Producto { get; set; }
 }
-

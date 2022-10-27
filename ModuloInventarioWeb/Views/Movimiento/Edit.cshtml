@@ -1,14 +1,14 @@
 ﻿@model Movimiento
 
 @{
-    ViewData["Title"] = "Crear nuevo movimiento";
+    ViewData["Title"] = "Editando Movimiento";
     IEnumerable<Producto> productos = ViewBag.Productos;
     List<SelectListItem> lista = ViewBag.ListaProductos;
 }
 
 <div class="container col-10 p-3">
-    <h2 class="display-4 text-primary">Crear Movimiento</h2>
-    <form class="form mt-4" id="formulario" method="post" asp-action="Crear">
+    <h2 class="display-4 text-primary">Editando Movimiento</h2>
+    <form class="form mt-4" id="formulario" method="post" asp-action="Edit">
         <div class="row">
             <div class="col-6 mb-3">
                 <label class="form-label">Tipo de Movimiento: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Para crear un movimiento de salida debe realizar un requerimiento hacia el inventario"><i class="bi bi-question-circle"></i></a></label>
@@ -45,7 +45,7 @@
                                 <span asp-validation-for="@Model.Detalles[i].IdProducto" class="text-danger"></span>
                             </td>
                             <td>
-                                <input asp-for="@Model.Detalles[i].Cantidad" type="number" min="1" max="50" step="1" class="form-control" value="1" />
+                                <input asp-for="@Model.Detalles[i].Cantidad" type="number" min="1" step="1" class="form-control" value="@(Model.Detalles[i].Cantidad)" />
                                 <span asp-validation-for="@Model.Detalles[i].Cantidad" class="text-danger"></span>
                             </td>
                             <td><input class="form-control" readonly type="number" asp-for="@Model.Detalles[i].PrecioUnidad" /></td>
@@ -69,9 +69,11 @@
                 </tr>
             </table>
         </div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="TipoMovimiento" />
         <div>
-            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Create</button>
-            <a asp-controller="Movimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Back to List</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar</button>
+            <a asp-controller="Movimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar</a>
         </div>
     </form>
 
@@ -100,13 +102,18 @@
                 newRow.innerHTML = rowOuterHtml;
 
                 let x = document.getElementsByTagName("INPUT");
+                let y = document.getElementsByTagName("SELECT");
+
+                for (let cnt = 0; cnt < y.length; cnt++) {
+                    if (y[cnt].id.indexOf('_' + nextRowId + '_') > 0) y[cnt].selectedIndex = 0;
+                }
 
                 for (let cnt = 0; cnt < x.length; cnt++) {
-                    if (x[cnt].type == "text" && x[cnt].id.indexOf('_' + nextRowId + '_') > 0) {
-                        if (x[cnt].id.indexOf('Subtotal') == 0)
-                            x[cnt].value = '';
-                    } else if (x[cnt].type == "number" && x[cnt].id.indexOf('_' + nextRowId + '_') > 0) {
-                        x[cnt].value = 1;
+                    if (x[cnt].type == "number" && x[cnt].id.indexOf('_' + nextRowId + '_') > 0) {
+                        if (x[cnt].id.indexOf('Subtotal') > 0 || x[cnt].id.indexOf('PrecioUnidad') > 0)
+                            x[cnt].value = 0;
+                        else
+                            x[cnt].value = 1;
 
                     }
                 }
@@ -205,13 +212,13 @@
                 let total = 0;
 
                 subtotales.forEach((item, index) => {
-                    total += parseFloat(item.value);    
+                    total += parseFloat(item.value);
                 });
 
                 totalItem.value = total;
             }
-            
+
         </script>
-        
+
     }
 </div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ModuloInventarioWeb.Data;
@@ -10,6 +11,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ModuloInventarioWeb.Controllers;
 
+[Authorize]
 public class ProductoController : Controller
 {
     private readonly IProductoData _data;
@@ -21,12 +23,23 @@ public class ProductoController : Controller
         _categoriaData = categoriaData;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int pg = 1)
     {
         try
         {
             IEnumerable<Producto> objProductoList = await _data.GetProducto();
-            return View(objProductoList);
+            const int pageSize = 5;
+
+            if (pg < 1) pg = 1;
+
+            int recsCount = objProductoList.Count();
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = objProductoList.Skip(recSkip).Take(pager.PageSize);
+
+            ViewBag.Pager = pager;
+
+            return View(data);
         }
         catch (Exception ex)
         {
@@ -66,7 +79,7 @@ public class ProductoController : Controller
             {
                 producto.Imagen_Producto = data;
                 await _data.InsertProducto(producto);
-                TempData["success"] = "Producto created successfully";
+                TempData["success"] = "Producto creado exitosamente";
                 return RedirectToAction("Index");
             }
 
@@ -110,20 +123,27 @@ public class ProductoController : Controller
     {
         try
         {
-            List<SelectListItem> lista = ObtenerCategorias().Result;
-            ViewBag.ListaCategorias = lista;
-            IFormFile imagen = Request.Form.Files[0];
-            var filestream = imagen.OpenReadStream();
-            byte[] data = new byte[filestream.Length];
-            filestream.Read(data, 0, data.Length);
+            if (Request.Form.Files.Count() > 0)
+            {
+                IFormFile imagen = Request.Form.Files[0];
+                var filestream = imagen.OpenReadStream();
+                byte[] data = new byte[filestream.Length];
+                filestream.Read(data, 0, data.Length);
+                producto.Imagen_Producto = data;
+            } else
+            {
+                var obj = await _data.GetProducto(producto.ID_Producto);
+                producto.Imagen_Producto = obj.Imagen_Producto;
+            }
 
-            producto.Imagen_Producto = data;
             await _data.UpdateProducto(producto);
-            TempData["success"] = "Producto updated successfully";
+            TempData["success"] = "Producto actualizado exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)
         {
+            List<SelectListItem> lista = ObtenerCategorias().Result;
+            ViewBag.ListaCategorias = lista;
             TempData["error"] = ex.Message;
             return View(producto);
         }
@@ -134,7 +154,7 @@ public class ProductoController : Controller
         try
         {
             await _data.DeleteProducto(id);
-            TempData["success"] = "Producto deleted successfully";
+            TempData["success"] = "Producto eliminada exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)

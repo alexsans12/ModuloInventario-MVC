@@ -1,0 +1,222 @@
+﻿@model Movimiento
+
+@{
+    ViewData["Title"] = "Crear nuevo movimiento";
+    IEnumerable<Producto> productos = ViewBag.Productos;
+    List<SelectListItem> lista = ViewBag.ListaProductos;
+}
+
+<div class="container col-10 p-3">
+    <h2 class="display-4 text-primary">Crear Movimiento</h2>
+    <form class="form mt-4" id="formulario" method="post" asp-action="Create">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label class="form-label">Tipo de Movimiento: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Para crear un movimiento de salida debe realizar un requerimiento hacia el inventario"><i class="bi bi-question-circle"></i></a></label>
+                <input class="form-control" value="Entrada" disabled class="form-control" />
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label" asp-for="Descripcion">Descripcion: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Agrege una breve descripcion del motivo de la entrada al inventario"><i class="bi bi-question-circle"></i></a></label>
+                <input class="form-control" asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="row justify-content-between mt-3">
+                <h3 class="col-auto" class="mt-3">Productos</h3>
+                <button type="button" onclick="AddItem(this)" id="add" class="col-auto btn btn-success"><i class="bi bi-plus-circle"></i> Agregar</button>
+            </div>
+            <table id="productos" class="table table-bordered table-striped mt-3 mb-0">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unidad</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Detalles.Count; i++)
+                    {
+
+                        <tr>
+                            <td>
+                                <select asp-for="@Model.Detalles[i].IdProducto" asp-items="lista" class="form-select">
+                                    <option disabled selected>--- Seleccione un producto ---</option>
+                                </select>
+                                <span asp-validation-for="@Model.Detalles[i].IdProducto" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Detalles[i].Cantidad" type="number" min="1" step="1" class="form-control" value="1" />
+                                <span asp-validation-for="@Model.Detalles[i].Cantidad" class="text-danger"></span>
+                            </td>
+                            <td><input class="form-control" readonly type="number" asp-for="@Model.Detalles[i].PrecioUnidad" /></td>
+                            <td><input class="form-control" readonly type="number" asp-for="@Model.Detalles[i].Subtotal" /></td>
+                            <td class="text-center">
+                                <button type="button" id="delete-@i-btn" class="btn btn-warning borrar" onclick="deleteItem(this)"><i class="bi bi-trash3"></i></button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="w-50 text-end">Total:</td>
+                    <td class="text-end pe-4">
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">Q</span>
+                            <input id="total" readonly asp-for="@Model.Total" class="form-control" type="number" />
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Crear</button>
+            <a asp-controller="Movimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar</a>
+        </div>
+    </form>
+
+    @section Scripts {
+        @{
+            <partial name="_ValidationScriptsPartial" />
+        }
+
+        <script>
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+            function AddItem(btn) {
+                let table = $("#productos");
+                let rows = table[0].getElementsByTagName("tr");
+                let rowOuterHtml = rows[rows.length - 1].outerHTML;
+
+                let lastRowId = rows.length - 2;
+                let nextRowId = parseInt(lastRowId) + 1;
+
+                rowOuterHtml = rowOuterHtml.replaceAll('_' + lastRowId + '_', '_' + nextRowId + '_');
+                rowOuterHtml = rowOuterHtml.replaceAll('[' + lastRowId + ']', '[' + nextRowId + ']');
+                rowOuterHtml = rowOuterHtml.replaceAll('-' + lastRowId + '-', '-' + nextRowId + '-');
+
+                let newRow = table[0].insertRow();
+                newRow.innerHTML = rowOuterHtml;
+
+                let x = document.getElementsByTagName("INPUT");
+                let y = document.getElementsByTagName("SELECT");
+
+                for (let cnt = 0; cnt < y.length; cnt++) {
+                    if (y[cnt].id.indexOf('_' + nextRowId + '_') > 0) y[cnt].selectedIndex = 0;
+                }
+
+                for (let cnt = 0; cnt < x.length; cnt++) {
+                    if (x[cnt].type == "number" && x[cnt].id.indexOf('_' + nextRowId + '_') > 0) {
+                        if (x[cnt].id.indexOf('Subtotal') > 0 || x[cnt].id.indexOf('PrecioUnidad') > 0)
+                            x[cnt].value = 0;
+                        else
+                            x[cnt].value = 1;
+
+                    }
+                }
+
+                rebindValidators();
+            }
+
+            function rebindValidators() {
+                let $form = $("#formulario");
+                $form.unbind();
+                $form.data("validator", null);
+                $.validator.unobtrusive.parse($form);
+                $form.validate($form.data("unobtrusiveValidation").options);
+            }
+
+            function deleteItem(btn) {
+                let table = $("#productos");
+                let rows = table[0].getElementsByTagName("tr");
+
+                let RowsCount = 0;
+
+                let x = document.querySelectorAll("[id*=Cantidad]");
+
+
+                for (i = 0; i < x.length; i++) {
+                    if (x[i].value > 0)
+                        RowsCount++;
+                }
+
+                if (RowsCount <= 1) {
+                    alert("Esta fila no puede ser elimninada.");
+                    return;
+                }
+
+                let btnId = btn.id.replaceAll("delete-", "").replaceAll("-btn", "");
+
+                let idCantidad = btnId + "__Cantidad";
+                let txtCantidad = document.querySelector("[id$='" + idCantidad + "']");
+                txtCantidad.value = 0;
+
+                $(btn).closest('tr').remove();
+
+                calcularTotal();
+            }
+
+            document.addEventListener('change', (e) => {
+                e.preventDefault();
+
+                if (e.target.id.indexOf("IdProducto") > 0) {
+                    let idItem = e.target.id.replaceAll("__IdProducto", "");
+
+                    let item = e.target.parentNode.parentNode;
+                    let producto = e.target;
+                    let cantidad = item.querySelector("#" + idItem + "__Cantidad");
+                    let subtotal = item.querySelector("#" + idItem + "__Subtotal");
+                    let precio = item.querySelector("#" + idItem + "__PrecioUnidad");
+
+                    @foreach (var producto in productos)
+                    {
+                        <text>
+                            if (producto.value == @producto.ID_Producto) {
+                                precio.value = @producto.Precio;
+                                subtotal.value = cantidad.value * @producto.Precio;
+                            }
+
+                        </text>
+                    }
+                }
+
+                if (e.target.id.indexOf("Cantidad") > 0) {
+                    let idItem = e.target.id.replaceAll("__Cantidad", "");
+                    let item = e.target.parentNode.parentNode;
+
+                    let producto = item.querySelector("#" + idItem + "__IdProducto");
+                    let subtotal = item.querySelector("#" + idItem + "__Subtotal");
+                    let precio = item.querySelector("#" + idItem + "__PrecioUnidad");
+
+                    @foreach (var producto in productos)
+                    {
+                        <text>
+                            if (producto.value == @producto.ID_Producto) {
+                                precio.value = @producto.Precio;
+                                subtotal.value = e.target.value * @producto.Precio;
+                            }
+
+                        </text>
+                    }
+                }
+
+                calcularTotal();
+            });
+
+            function calcularTotal() {
+                let subtotales = document.querySelectorAll("[id*=Subtotal]");
+                let totalItem = document.querySelector("#total");
+                let total = 0;
+
+                subtotales.forEach((item, index) => {
+                    total += parseFloat(item.value);    
+                });
+
+                totalItem.value = total;
+            }
+            
+        </script>
+        
+    }
+</div>

@@ -17,6 +17,7 @@
     <None Remove="Views\Movimiento\" />
     <None Remove="Views\Autenticacion\" />
     <None Remove="Helpers\" />
+    <None Remove="Views\Requerimiento\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
@@ -30,5 +31,6 @@
     <Folder Include="Views\Movimiento\" />
     <Folder Include="Views\Autenticacion\" />
     <Folder Include="Helpers\" />
+    <Folder Include="Views\Requerimiento\" />
   </ItemGroup>
 </Project>

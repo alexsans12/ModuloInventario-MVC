@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ModuloInventarioWeb.Data;
+using ModuloInventarioWeb.Helpers;
 using ModuloInventarioWeb.Models;
 using static System.Net.Mime.MediaTypeNames;
 namespace ModuloInventarioWeb.Controllers;
 
+[Authorize]
 public class UsuarioController : Controller
 {
     private readonly IUsuarioData _data;
@@ -16,12 +19,24 @@ public class UsuarioController : Controller
     {
         _data = data;
     }
-    public async Task<IActionResult> Index()
+
+    public async Task<IActionResult> Index(int pg = 1)
     {
         try
         {
             IEnumerable<Usuario> objUsuarioList = await _data.GetUsuario();
-            return View(objUsuarioList);
+
+            const int pageSize = 5;
+
+            if (pg < 1) pg = 1;
+
+            int recsCount = objUsuarioList.Count();
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = objUsuarioList.Skip(recSkip).Take(pager.PageSize);
+
+            ViewBag.Pager = pager;
+            return View(data);
         }
         catch (Exception ex)
         {
@@ -36,7 +51,7 @@ public class UsuarioController : Controller
     // POST
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Usuario usuario)
+    public async Task<IActionResult> Create(Usuario usuario, String password)
     {
         try
         {
@@ -44,12 +59,16 @@ public class UsuarioController : Controller
             var filestream = imagen.OpenReadStream();
             byte[] data = new byte[filestream.Length];
             filestream.Read(data, 0, data.Length);
-        
+
+            string salt = usuario.Nombre.ToUpper();
+            byte[] passTemporal = HelperCryptography.EncriptarPassword(password, salt);
+
             if (ModelState.IsValid)
             {
                 usuario.Foto_Perfil = data;
+                usuario.Contrasena = passTemporal;
                 await _data.InsertUsuario(usuario);
-                TempData["success"] = "Usuario created successfully";
+                TempData["success"] = "Usuario creado exitosamente";
                 return RedirectToAction("Index");
             }
 
@@ -87,18 +106,31 @@ public class UsuarioController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(Usuario usuario)
+    public async Task<IActionResult> Edit(Usuario usuario, string password)
     {
         try
         {
-            IFormFile imagen = Request.Form.Files[0];
-            var filestream = imagen.OpenReadStream();
-            byte[] data = new byte[filestream.Length];
-            filestream.Read(data, 0, data.Length);
+            if (Request.Form.Files.Count() > 0)
+            {
+                IFormFile imagen = Request.Form.Files[0];
+                var filestream = imagen.OpenReadStream();
+                byte[] data = new byte[filestream.Length];
+                filestream.Read(data, 0, data.Length);
+                usuario.Foto_Perfil = data;
+            } else
+            {
+                var obj = await _data.GetUsuario(usuario.ID_Usuario);
+                usuario.Foto_Perfil = obj.Foto_Perfil;
+            }
 
-            usuario.Foto_Perfil = data;
+            string salt = usuario.Nombre.ToUpper();
+            byte[] passTemporal = HelperCryptography.EncriptarPassword(password, salt);
+
+            usuario.Contrasena = passTemporal;
+
             await _data.UpdateUsuario(usuario);
-            TempData["success"] = "Usuario updated successfully";
+
+            TempData["success"] = "Usuario actualizado exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)
@@ -112,10 +144,8 @@ public class UsuarioController : Controller
     {
         try
         {
-
-
             await _data.DeleteUsuario(id);
-            TempData["success"] = "Usuario deleted successfully";
+            TempData["success"] = "Usuario eliminado exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)
@@ -123,15 +153,5 @@ public class UsuarioController : Controller
             TempData["error"] = ex.Message;
             return RedirectToAction("Index");
         }
-    }
-
-    public async Task<IActionResult> ObtenerImagen(int id)
-    {
-        Usuario usuario = await _data.GetUsuario(id);
-
-        byte[] imagen = usuario.Foto_Perfil;
-
-        MemoryStream memoryStream = new MemoryStream(imagen);
-        return null;
     }
 }

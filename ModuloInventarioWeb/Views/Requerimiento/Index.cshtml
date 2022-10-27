@@ -1,10 +1,11 @@
-﻿@model IEnumerable<Movimiento>
+﻿@model IEnumerable<Requerimiento>
 
 @{
-    ViewData["Title"] = "Movimientos";
+    ViewData["Title"] = "Requerimientos";
+
     Pager pager = new Pager();
     int pageNo = 0;
-    if(ViewBag.Pager != null)
+    if (ViewBag.Pager != null)
     {
         pager = ViewBag.Pager;
         pageNo = pager.CurrentPage;
@@ -14,7 +15,7 @@
 <div class="container p-3">
     <div class="row pt-4 mb-5">
         <div class="col-6">
-            <h2 class="text-primary">Movimientos</h2>
+            <h2 class="text-primary">Requerimientos</h2>
         </div>
         <div class="col-6 text-end">
             <a asp-controller="Movimiento" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
@@ -23,10 +24,10 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Tipo de Movimiento</th>
-                <th>Fecha de Creacion</th>
-                <th>Descripcion</th>
+                <th>Fecha de Ingreso</th>
+                <th>Motivo</th>
                 <th>Por</th>
+                <th>Estado</th>
                 <th></th>
             </tr>
         </thead>
@@ -34,17 +35,9 @@
             @foreach (var obj in Model)
             {
                 <tr>
-                    @if (obj.TipoMovimiento)
-                    {
-                        <td style="width=50%">Salida</td>
-                    }
-                    else
-                    {
-                        <td style="width=50%">Entrada</td>
-                    }
-                    <td style="width=30%">@obj.FechaCreacion</td>
-                    <td style="width=30%">@obj.Descripcion</td>
-                    <td style="width=30%">@obj.Usuario.Nombre</td>
+                    <td style="width=30%">@obj.FechaIngreso</td>
+                    <td style="width=30%">@obj.Motivo</td>
+                    <td style="width=30%">@obj.UsuarioIngreso.Nombre</td>
                     <td class="text-center">
                         <div class="btn-group" role="group">
                             <a class="btn btn-primary" asp-action="View" asp-route-id="@obj.Id"><i class="bi bi-eye"></i></a>
@@ -57,7 +50,7 @@
         </tbody>
     </table>
     <div class="container">
-        @if(pager.TotalPages > 0)
+        @if (pager.TotalPages > 0)
         {
             <ul class="pagination justify-content-end">
                 @if (pager.CurrentPage > 1)
@@ -88,3 +81,4 @@
         }
     </div>
 </div>
+

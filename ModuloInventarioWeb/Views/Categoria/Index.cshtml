@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Categoria>
 @{
-    ViewData["Title"] = "Listado de Categoria";
+    ViewData["Title"] = "Listado de Categorias";
+
     Pager pager = new Pager();
     int pageNo = 0;
     if (ViewBag.Pager != null)
@@ -36,7 +37,7 @@
                     <td class="text-center">
                         <div class="w-75 btn-group" role="group">
                             <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Categoria"><i class="bi bi-pencil-square"></i> </a>
-                            <a class="btn btn-warning" asp-action="Delete" asp-route-id="@obj.ID_Categoria"><i class="bi bi-trash3"></i> </a>
+                            <a class="btn btn-warning" asp-action="Delete" asp-route-id="@obj.ID_Categoria" onclick="return confirm('Estas seguro de eliminar esta Categoría?')"><i class="bi bi-trash3"></i> </a>
                         </div>
                     </td>
                 </tr>
@@ -47,10 +48,30 @@
         @if (pager.TotalPages > 0)
         {
             <ul class="pagination justify-content-end">
+                @if (pager.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Categoria" asp-action="Index" asp-route-pg="1"><i class="bi bi-chevron-double-left"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Categoria" asp-action="Index" asp-route-pg="@(pager.CurrentPage - 1)"><i class="bi bi-chevron-left"></i></a>
+                    </li>
+                }
+
                 @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
                 {
                     <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
                         <a class="page-link" asp-controller="Categoria" asp-action="Index" asp-route-pg="@pge">@pge</a>
+                    </li>
+                }
+
+                @if (pager.CurrentPage < pager.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Categoria" asp-action="Index" asp-route-pg="@(pager.CurrentPage + 1)"><i class="bi bi-chevron-right"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Categoria" asp-action="Index" asp-route-pg="@(pager.TotalPages)"><i class="bi bi-chevron-double-right"></i></a>
                     </li>
                 }
             </ul>

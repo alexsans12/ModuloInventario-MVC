@@ -7,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddSingleton<ICategoryData, CategoryData>();
 builder.Services.AddSingleton<IDetalleMovimientoData, DetalleMovimientoData>();
 builder.Services.AddSingleton<IMovimientoData, MovimientoData>();
 builder.Services.AddSingleton<ICategoriaData, CategoriaData>();
