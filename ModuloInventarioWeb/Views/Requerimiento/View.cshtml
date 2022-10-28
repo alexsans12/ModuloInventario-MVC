@@ -1,21 +1,30 @@
-﻿@model Movimiento
+﻿@model Requerimiento
 
 @{
-    ViewData["Title"] = "Viendo Movimiento";
+    ViewData["Title"] = "Viendo Requerimiento";
     List<SelectListItem> lista = ViewBag.ListaProductos;
 }
 
 <div class="container col-10 p-3">
-    <h2 class="display-4 text-primary">Mostrando Movimiento de @(Model.TipoMovimiento ? "Salida" : "Entrada")</h2>
+    <h2 class="display-4 text-primary">Mostrando Requerimiento</h2>
     <form class="form mt-4" id="formulario">
         <div class="row">
             <div class="mb-3 col-6">
                 <h3 class="form-label" asp-for="Descripcion">Ingresado por:</h3>
-                <p>@Model.Usuario.Nombre</p>
+                <p>@Model.UsuarioIngreso.Nombre</p>
+                @if(Model.UsuarioAutorizo != null)
+                {
+                    <h3 class="form-label mt-2" asp-for="Descripcion">Autorizado por:</h3>
+                    <p>@Model.UsuarioAutorizo.Nombre</p>
+                }
+                else
+                {
+                    <p class="alert alert-info">El requerimiento necesita ser autorizado</p>    
+                }
             </div>
             <div class="mb-3 col-6">
-                <h3 class="form-label" asp-for="Descripcion">Descripcion:</h3>
-                <p>@Model.Descripcion</p>
+                <h3 class="form-label" asp-for="Descripcion">Motivo:</h3>
+                <p>@Model.Motivo</p>
             </div>
             <div class="row justify-content-between">
                 <h3 class="col-auto" class="mt-3">Productos</h3>
@@ -65,7 +74,11 @@
             </div>
         </div>
         <div>
-            <a asp-controller="Movimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar</a>
+            @if(Model.IdUsuarioAutorizo == null)
+            {
+                <a asp-controller="Requerimiento" asp-action="Authorize" asp-route-id="@Model.Id" class="btn btn-warning"><i class="bi bi-clipboard-check"></i> Autorizar Requerimiento</a>
+            }
+            <a asp-controller="Requerimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar</a>
         </div>
     </form>
 </div>

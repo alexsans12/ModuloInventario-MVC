@@ -19,31 +19,32 @@
             <a asp-controller="Categoria" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Crear una nueva categoría</a>
         </div>
     </div>
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Descripción de la categoría</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var obj in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <td style="width=50%">@obj.Nombre</td>
-                    <td style="width=30%">@obj.Descripcion</td>
-                    <td class="text-center">
-                        <div class="w-75 btn-group" role="group">
-                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Categoria"><i class="bi bi-pencil-square"></i> </a>
-                            <a class="btn btn-warning" asp-action="Delete" asp-route-id="@obj.ID_Categoria" onclick="return confirm('Estas seguro de eliminar esta Categoría?')"><i class="bi bi-trash3"></i> </a>
-                        </div>
-                    </td>
+                    <th>Nombre</th>
+                    <th>Descripción de la categoría</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td style="width=50%">@obj.Nombre</td>
+                        <td style="width=30%">@obj.Descripcion</td>
+                        <td class="text-center">
+                            <div class="w-75 btn-group" role="group">
+                                <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Categoria"><i class="bi bi-pencil-square"></i> </a>
+                                <a class="btn btn-warning" asp-action="Delete" asp-route-id="@obj.ID_Categoria" onclick="return confirm('Estas seguro de eliminar esta Categoría?')"><i class="bi bi-trash3"></i> </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     <div class="container">
         @if (pager.TotalPages > 0)
         {

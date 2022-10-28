@@ -12,7 +12,7 @@ public class DetalleMovimiento
 
     [Required]
     [ForeignKey("Producto")]
-    public int IdProducto { get; set; } // Agregar la clase producto cuando ya este creada
+    public int IdProducto { get; set; }
 
     [Required]
     public int Cantidad { get; set; }
@@ -23,6 +23,6 @@ public class DetalleMovimiento
     [Required]
     public double Subtotal { get; set; }
 
-    public virtual Producto Producto { get; set; }
+    public virtual Producto? Producto { get; set; }
 }
 

@@ -75,9 +75,6 @@ public class AutenticacionController : Controller
                 string salt = data.Nombre.ToUpper();
                 byte[] passTemporal = HelperCryptography.EncriptarPassword(password, salt);
 
-                //data.Contrasena = passTemporal;
-                //await _usuarioData.UpdateUsuario(data);
-
                 bool respuesta = HelperCryptography.compareArrays(passUsuario, passTemporal);
 
                 if (respuesta == true)

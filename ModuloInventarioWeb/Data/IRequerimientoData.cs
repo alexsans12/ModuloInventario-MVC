@@ -9,5 +9,6 @@ public interface IRequerimientoData
     Task<Requerimiento?> ObtenerPorId(int id);
     Task<int> Insertar(Requerimiento requerimiento);
     Task Actualizar(Requerimiento requerimiento);
+    Task Autorizar(Requerimiento requerimiento);
     Task Borrar(int id);
 }

@@ -1,26 +1,26 @@
-﻿@model Movimiento
+﻿@model Requerimiento
 
 @{
-    ViewData["Title"] = "Editando Movimiento";
+    ViewData["Title"] = "Editando Requerimiento";
     IEnumerable<Producto> productos = ViewBag.Productos;
     List<SelectListItem> lista = ViewBag.ListaProductos;
 }
 
 <div class="container col-10 p-3">
-    <h2 class="display-4 text-primary">Editando Movimiento</h2>
+    <h2 class="display-4 text-primary">Editando Requerimiento</h2>
     <form class="form mt-4" id="formulario" method="post" asp-action="Edit">
         <div class="row">
             <div class="col-6 mb-3">
-                <label class="form-label">Tipo de Movimiento: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Para crear un movimiento de salida debe realizar un requerimiento hacia el inventario"><i class="bi bi-question-circle"></i></a></label>
-                <input class="form-control" value="Entrada" disabled class="form-control" />
+                <label class="form-label">Tipo de Movimiento: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Para crear un movimiento de entrada debe dirigirse a movimientos"><i class="bi bi-question-circle"></i></a></label>
+                <input class="form-control" value="Salida" disabled class="form-control" />
             </div>
             <div class="col-6 mb-3">
-                <label class="form-label" asp-for="Descripcion">Descripcion: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Agrege una breve descripcion del motivo de la entrada al inventario"><i class="bi bi-question-circle"></i></a></label>
-                <input class="form-control" asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                <label class="form-label" asp-for="Motivo">Motivo: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Escriba el motivo de la salida del producto del inventario"><i class="bi bi-question-circle"></i></a></label>
+                <input class="form-control" asp-for="Motivo" class="form-control" />
+                <span asp-validation-for="Motivo" class="text-danger"></span>
             </div>
             <div class="row justify-content-between mt-3 pe-0">
-                <h3 class="col-auto" class="mt-3">Productos</h3>
+                <h3 class="col-auto mt-3">Productos</h3>
                 <button type="button" onclick="AddItem(this)" id="add" class="col-auto btn btn-success"><i class="bi bi-plus-circle"></i> Agregar</button>
             </div>
             <div class="table-responsive">
@@ -72,10 +72,10 @@
             </div>
         </div>
         <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="TipoMovimiento" />
+        <input type="hidden" asp-for="Estado" />
         <div>
             <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar</button>
-            <a asp-controller="Movimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar</a>
+            <a asp-controller="Requerimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar</a>
         </div>
     </form>
 
@@ -84,7 +84,7 @@
             <partial name="_ValidationScriptsPartial" />
         }
 
-        <script>
+<script>
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
@@ -178,6 +178,7 @@
                         <text>
                             if (producto.value == @producto.ID_Producto) {
                                 precio.value = @producto.Precio;
+                                cantidad.max = @producto.Stock;
                                 subtotal.value = cantidad.value * @producto.Precio;
                             }
 
@@ -220,7 +221,7 @@
                 totalItem.value = total;
             }
 
-        </script>
+</script>
 
     }
 </div>

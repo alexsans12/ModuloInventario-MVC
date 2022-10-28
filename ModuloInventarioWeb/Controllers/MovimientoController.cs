@@ -180,8 +180,6 @@ public class MovimientoController : Controller
             Movimiento movimiento = await _movimientoData.ObtenerPorId((int)Id);
             movimiento.Detalles = (List<DetalleMovimiento>?)await _detalleMovientoData.ObtenerPorMovimiento(movimiento.Id);
 
-            await _movimientoData.Actualizar(movimiento);
-
             foreach (DetalleMovimiento detalle in movimiento.Detalles)
             {
                 detalle.Producto = await _productoData.GetProducto(detalle.IdProducto);

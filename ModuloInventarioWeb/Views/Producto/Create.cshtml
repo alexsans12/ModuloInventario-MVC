@@ -31,7 +31,7 @@
                 <label asp-for="Precio">Precio</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">Q</span>
-                    <input asp-for="Precio" class="form-control" />
+                    <input type="number" min="0" asp-for="Precio" class="form-control" />
                 </div>
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
@@ -47,7 +47,7 @@
             </div>
             <div class="mb-3 col-5">
                 <label asp-for="Imagen_Producto">Imagen del Producto</label>
-                <input type="file" accept="Image/*" asp-for="Imagen_Producto" class="form-control" />
+                <input type="file" required accept="Image/*" asp-for="Imagen_Producto" class="form-control" />
                 <span asp-validation-for="Imagen_Producto" class="text-danger"></span>
             </div>
             <div>

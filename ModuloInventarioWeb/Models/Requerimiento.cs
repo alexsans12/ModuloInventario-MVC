@@ -17,7 +17,7 @@ public class Requerimiento
 
     [Required]
     [DataType(DataType.Date)]
-    public DateTime FechaIngreso { get; set; } = DateTime.Now.Date;
+    public DateTime FechaCreacion { get; set; } = DateTime.Now;
 
     [ForeignKey("Usuario")]
     public int? IdUsuarioAutorizo { get; set; }
@@ -25,7 +25,7 @@ public class Requerimiento
     public virtual Usuario? UsuarioAutorizo { get; set; }
 
     [DataType(DataType.Date)]
-    public DateTime? FechaAutorizo { get; set; } = DateTime.Now.Date;
+    public DateTime? FechaAutorizo { get; set; } = DateTime.Now;
 
     [Required]
     public String Motivo { get; set; }

@@ -20,51 +20,52 @@
             <a asp-controller="Producto" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Crear una nuevo producto</a>
         </div>
     </div>
-
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Código</th>
-
-                <th>Nombre</th>
-                <th>Stock</th>
-                <th>Precio</th>
-                <th>Imagen del Producto</th>
-                <th></th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var obj in Model)
-            {
-                var imgsrc = "";
-                if (obj.Imagen_Producto != null)
-                {
-
-                    var base64 = Convert.ToBase64String(obj.Imagen_Producto);
-                    imgsrc = String.Format("data:image/jpeg;base64,{0}", base64);
-                }
-
-
-
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
                 <tr>
-                    <td style="width=30%">@obj.Codigo</td>
-                    <td style="width=30%">@obj.Nombre</td>
-                    <td style="width=30%">@obj.Stock</td>
-                    <td style="width=30%">@obj.Precio</td>
+                    <th>Código</th>
 
-                    <td style="width=50%"><img style="max-width:150px" src="@imgsrc"></td>
-                    <td class="text-center">
-                        <div class="w-75 btn-group" role="group">
-                            <a class="btn btn-primary" asp-action="View" asp-route-id="@obj.ID_Producto"><i class="bi bi-eye"></i> </a>
-                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Producto"><i class="bi bi-pencil-square"></i> </a>
-                            <a class="btn btn-warning" onclick="return confirm('Estas seguro de eliminar este Producto?')" asp-action="Delete" asp-route-id="@obj.ID_Producto"><i class="bi bi-trash3"></i> </a>
-                        </div>
-                    </td>
+                    <th>Nombre</th>
+                    <th>Stock</th>
+                    <th>Precio</th>
+                    <th>Imagen del Producto</th>
+                    <th></th>
+
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    var imgsrc = "";
+                    if (obj.Imagen_Producto != null)
+                    {
+
+                        var base64 = Convert.ToBase64String(obj.Imagen_Producto);
+                        imgsrc = String.Format("data:image/jpeg;base64,{0}", base64);
+                    }
+
+
+
+                    <tr>
+                        <td style="width=30%">@obj.Codigo</td>
+                        <td style="width=30%">@obj.Nombre</td>
+                        <td style="width=30%">@obj.Stock</td>
+                        <td style="width=30%">@obj.Precio</td>
+
+                        <td style="width=50%"><img style="max-width:150px" src="@imgsrc"></td>
+                        <td class="text-center">
+                            <div class="w-75 btn-group" role="group">
+                                <a class="btn btn-primary" asp-action="View" asp-route-id="@obj.ID_Producto"><i class="bi bi-eye"></i> </a>
+                                <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Producto"><i class="bi bi-pencil-square"></i> </a>
+                                <a class="btn btn-warning" onclick="return confirm('Estas seguro de eliminar este Producto?')" asp-action="Delete" asp-route-id="@obj.ID_Producto"><i class="bi bi-trash3"></i> </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     <div class="container">
         @if (pager.TotalPages > 0)
         {

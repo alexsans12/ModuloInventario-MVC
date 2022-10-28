@@ -18,6 +18,7 @@
     <None Remove="Views\Autenticacion\" />
     <None Remove="Helpers\" />
     <None Remove="Views\Requerimiento\" />
+    <None Remove="Views\Kardex\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.123" />
@@ -32,5 +33,6 @@
     <Folder Include="Views\Autenticacion\" />
     <Folder Include="Helpers\" />
     <Folder Include="Views\Requerimiento\" />
+    <Folder Include="Views\Kardex\" />
   </ItemGroup>
 </Project>
