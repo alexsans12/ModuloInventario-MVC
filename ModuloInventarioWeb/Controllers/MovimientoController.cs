@@ -16,13 +16,15 @@ public class MovimientoController : Controller
     private readonly IDetalleMovimientoData _detalleMovientoData;
     private readonly IProductoData _productoData;
     private readonly IUsuarioData _usuarioData;
+    private readonly IKardexData _kardexData;
 
-    public MovimientoController(IMovimientoData movimientoData, IProductoData productoData, IDetalleMovimientoData detalleMovimientoData, IUsuarioData usuarioData)
+    public MovimientoController(IMovimientoData movimientoData, IProductoData productoData, IDetalleMovimientoData detalleMovimientoData, IUsuarioData usuarioData, IKardexData kardexData)
     {
         _movimientoData = movimientoData;
         _productoData = productoData;
         _detalleMovientoData = detalleMovimientoData;
         _usuarioData = usuarioData;
+        _kardexData = kardexData;
     }
 
     public async Task<IActionResult> Index(int pg = 1)
@@ -89,11 +91,27 @@ public class MovimientoController : Controller
 
             foreach (DetalleMovimiento detalle in movimiento.Detalles)
             {
+                Kardex kardex = new Kardex();
+
                 detalle.IdMovimiento = idMovimiento;
                 await _detalleMovientoData.Insertar(detalle);
                 detalle.Producto = await _productoData.GetProducto(detalle.IdProducto);
+                kardex.StockAnterior = detalle.Producto.Stock;
                 detalle.Producto.Stock = detalle.Producto.Stock + detalle.Cantidad;
                 await _productoData.UpdateProducto(detalle.Producto);
+
+                kardex.FechaCreacion = movimiento.FechaCreacion;
+                kardex.Motivo = movimiento.Descripcion;
+                kardex.Cantidad = detalle.Cantidad;
+                kardex.IdUsuario = movimiento.IdUsuario;
+                kardex.IdProducto = detalle.IdProducto;
+                kardex.IdMovimiento = movimiento.Id;
+                kardex.TipoMovimiento = movimiento.TipoMovimiento;
+                kardex.Total = detalle.Subtotal;
+                kardex.PrecioUnidad = detalle.PrecioUnidad;
+                kardex.StockActual = detalle.Producto.Stock;
+
+                await _kardexData.InsertKardex(kardex);
             }
 
             TempData["success"] = "Movimiento de entrada registrado exitosamente";
@@ -153,14 +171,31 @@ public class MovimientoController : Controller
             }
 
             await _detalleMovientoData.Borrar(movimiento.Id);
+            await _kardexData.DeleteKardexMov(movimiento.Id);
 
             foreach (DetalleMovimiento detalle in movimiento.Detalles)
             {
+                Kardex kardex = new Kardex();
+
                 detalle.IdMovimiento = movimiento.Id;
                 await _detalleMovientoData.Insertar(detalle);
                 detalle.Producto = await _productoData.GetProducto(detalle.IdProducto);
+                kardex.StockAnterior = detalle.Producto.Stock;
                 detalle.Producto.Stock = detalle.Producto.Stock + detalle.Cantidad;
                 await _productoData.UpdateProducto(detalle.Producto);
+
+                kardex.FechaCreacion = movimiento.FechaCreacion;
+                kardex.Motivo = movimiento.Descripcion;
+                kardex.Cantidad = detalle.Cantidad;
+                kardex.IdUsuario = movimiento.IdUsuario;
+                kardex.IdProducto = detalle.IdProducto;
+                kardex.IdMovimiento = movimiento.Id;
+                kardex.TipoMovimiento = movimiento.TipoMovimiento;
+                kardex.Total = detalle.Subtotal;
+                kardex.PrecioUnidad = detalle.PrecioUnidad;
+                kardex.StockActual = detalle.Producto.Stock;
+
+                await _kardexData.InsertKardex(kardex);
             }
 
             TempData["success"] = "El movimiento se a actualizado exitosamente";
@@ -178,6 +213,13 @@ public class MovimientoController : Controller
         try
         {
             Movimiento movimiento = await _movimientoData.ObtenerPorId((int)Id);
+
+            if(movimiento.TipoMovimiento)
+            {
+                TempData["error"] = "Solo pueden eliminarse movimientos de entrada";
+                return RedirectToAction("Index");
+            }
+
             movimiento.Detalles = (List<DetalleMovimiento>?)await _detalleMovientoData.ObtenerPorMovimiento(movimiento.Id);
 
             foreach (DetalleMovimiento detalle in movimiento.Detalles)
@@ -187,6 +229,7 @@ public class MovimientoController : Controller
                 await _productoData.UpdateProducto(detalle.Producto);
             }
 
+            await _kardexData.DeleteKardexMov(movimiento.Id);
             await _detalleMovientoData.Borrar(movimiento.Id);
             await _movimientoData.Borrar(movimiento.Id);
 

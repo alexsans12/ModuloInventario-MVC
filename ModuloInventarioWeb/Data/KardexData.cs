@@ -4,7 +4,7 @@ using ModuloInventarioWeb.Models;
 
 namespace ModuloInventarioWeb.Data;
 
-public class KardexData : IKardex
+public class KardexData : IKardexData
 {
     private readonly ISqlDataAccess _db;
 
@@ -13,9 +13,15 @@ public class KardexData : IKardex
         _db = db;
     }
 
-    public Task DeleteKardex(int id)
+    public Task DeleteKardexMov(int id)
     {
-        var results = _db.SaveData("SPKardex_Eliminar", new { IdMovimiento = id });
+        var results = _db.SaveData("SPKardex_EliminarMov", new { IdMovimiento = id });
+        return results;
+    }
+
+    public Task DeleteKardexReq(int id)
+    {
+        var results = _db.SaveData("SPKardex_EliminarReq", new { IdRequerimiento = id });
         return results;
     }
 
@@ -24,9 +30,16 @@ public class KardexData : IKardex
         return _db.LoadData<Kardex, dynamic>("SPKardex_GetAll", new { });
     }
 
-    public async Task<Kardex?> GetById(int id)
+    public async Task<Kardex?> GetByIdMovimiento(int id)
     {
-        var results = await _db.LoadData<Kardex, dynamic>("SPCategoria_GetById", new { IdMovimiento = id });
+        var results = await _db.LoadData<Kardex, dynamic>("SPKardex_GetByIdMovimiento", new { IdMovimiento = id });
+
+        return results.FirstOrDefault();
+    }
+
+    public async Task<Kardex?> GetByIdRequerimiento(int id)
+    {
+        var results = await _db.LoadData<Kardex, dynamic>("SPKardex_GetByIdRequerimiento", new { IdRequerimiento = id });
 
         return results.FirstOrDefault();
     }
@@ -37,9 +50,15 @@ public class KardexData : IKardex
         return results;
     }
 
+    public Task<IEnumerable<Kardex>> GetByProducto(int id)
+    {
+        var results = _db.LoadData<Kardex, dynamic>("SPKardex_GetByProducto", new { IdProducto = id });
+        return results;
+    }
+
     public Task InsertKardex(Kardex kardex)
     {
-        var results = _db.SaveData("SPKardex_Insertar", new { kardex.FechaCreacion, kardex.Motivo, kardex.Cantidad, kardex.IdUsuario, kardex.IdProducto, kardex.IdMovimiento, kardex.TipoMovimiento, kardex.Total, Costo = kardex.PrecioUnidad, kardex.StockAnterior, kardex.StockActual });
+        var results = _db.SaveData("SPKardex_Insertar", new { kardex.FechaCreacion, kardex.Motivo, kardex.Cantidad, kardex.IdUsuario, kardex.IdProducto, kardex.IdMovimiento, kardex.IdRequerimiento, kardex.TipoMovimiento, kardex.Total, Costo = kardex.PrecioUnidad, kardex.StockAnterior, kardex.StockActual });
         return results;
     }
 }

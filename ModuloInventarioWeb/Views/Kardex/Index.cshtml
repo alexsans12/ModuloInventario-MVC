@@ -2,14 +2,9 @@
 
 @{
     ViewData["Title"] = "Kardex";
-
-    Pager pager = new Pager();
-    int pageNo = 0;
-    if (ViewBag.Pager != null)
-    {
-        pager = ViewBag.Pager;
-        pageNo = pager.CurrentPage;
-    }
+    List<SelectListItem> lista = ViewBag.ListaProductos;
+    Producto producto = ViewBag.Producto;
+    Kardex kardex = new Kardex();
 }
 
 <div class="container p-3">
@@ -18,66 +13,67 @@
             <h2 class="text-primary">Kardex</h2>
         </div>
         <div class="col-6 text-end">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a asp-controller="Kardex" asp-action="Index" asp-route-id="0" class="btn btn-outline-primary"><i class="bi bi-box-arrow-in-right"></i> Entradas</a>
-                <a asp-controller="Kardex" asp-action="Index" asp-route-id="1" class="btn btn-outline-primary"><i class="bi bi-box-arrow-left"></i> Salidas</a>
-            </div>
+            <form method="post" asp-action="Index" class="input-group mb-3 position-relative">
+                <select asp-for="@kardex.IdProducto" asp-items="lista" class="form-select">
+                    <option disabled selected>--- Seleccione un producto ---</option>
+                </select>
+                <span asp-validation-for="@kardex.IdProducto" class="text-danger position-absolute" style="bottom: -25px; left: 10px"></span>
+                <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i> Buscar</button>
+            </form>
         </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Fecha de Ingreso</th>
-                    <th>Motivo</th>
-                    <th>Por</th>
-                    <th>Estado</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obj in Model)
-                {
+    @if (Model != null)
+    {
+        <div class="text-center">
+            <h2>Kardex de Inventario</h2>
+            <div class="row justify-content-between mt-4 mb-3">
+                <p class="col-auto"><span class="fw-bold">Producto: </span> @producto.Nombre</p>
+                <p class="col-auto"><span class="fw-bold">Stock Actual: </span> @producto.Stock</p>
+                <p class="col-auto">@DateTime.Now</p>
+            </div>
+        </div>
+        <div class="table-responsive" style="max-height: 800px">
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr>
-                        <td>@obj.FechaCreacion</td>
-                        <td>@obj.Motivo</td>
-                        <td>@obj.Usuario.Nombre</td>
-                        <td>@obj.Motivo</td>
+                        <th>Fecha</th>
+                        <th>Movimiento</th>
+                        <th>Motivo</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Stock Anterior</th>
+                        <th>Stock Actual</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="container">
-        @if (pager.TotalPages > 0)
-        {
-            <ul class="pagination justify-content-end">
-                @if (pager.CurrentPage > 1)
-                {
-                    <li class="page-item">
-                        <a class="page-link" asp-controller="Requerimiento" asp-action="Index" asp-route-pg="1"><i class="bi bi-chevron-double-left"></i></a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" asp-controller="Requerimiento" asp-action="Index" asp-route-pg="@(pager.CurrentPage - 1)"><i class="bi bi-chevron-left"></i></a>
-                    </li>
-                }
-                @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
-                {
-                    <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-controller="Requerimiento" asp-action="Index" asp-route-pg="@pge">@pge</a>
-                    </li>
-                }
-                @if (pager.CurrentPage < pager.TotalPages)
-                {
-                    <li class="page-item">
-                        <a class="page-link" asp-controller="Requerimiento" asp-action="Index" asp-route-pg="@(pager.CurrentPage + 1)"><i class="bi bi-chevron-right"></i></a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" asp-controller="Requerimiento" asp-action="Index" asp-route-pg="@(pager.TotalPages)"><i class="bi bi-chevron-double-right"></i></a>
-                    </li>
-                }
-            </ul>
-        }
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model)
+                    {
+                        <tr>
+                            <td>@obj.FechaCreacion</td>
+                            <td>@(obj.TipoMovimiento ? "Salida" : "Entrada")</td>
+                            <td>@obj.Motivo</td>
+                            <td>@obj.Producto.Nombre</td>
+                            <td>@obj.Cantidad</td>
+                            <td>@obj.PrecioUnidad</td>
+                            <td>@obj.StockAnterior</td>
+                            <td>@obj.StockActual</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h2 class="display-5">Intenta con un producto...</h2>
+        </div>
+    }
 </div>
 
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

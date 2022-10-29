@@ -2,68 +2,86 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ModuloInventarioWeb.Data;
 using ModuloInventarioWeb.Models;
 
 namespace ModuloInventarioWeb.Controllers
 {
+    [Authorize]
     public class KardexController : Controller
     {
 
-        private readonly IKardex _kardexData;
+        private readonly IKardexData _kardexData;
         private readonly IProductoData _productoData;
         private readonly IUsuarioData _usuarioData;
 
-        public KardexController(IKardex kardexData, IProductoData productoData, IUsuarioData usuarioData)
+        public KardexController(IKardexData kardexData, IProductoData productoData, IUsuarioData usuarioData)
         {
             _kardexData = kardexData;
             _productoData = productoData;
             _usuarioData = usuarioData;
         }
 
-        public async Task<IActionResult> Index(int pg = 1)
+        public async Task<IActionResult> Index()
         {
             try
             {
-                IEnumerable<Kardex> kardices = await _kardexData.GetAll();
+                List<SelectListItem> listaProductos = ObtenerListaProductos().Result;
+                ViewBag.ListaProductos = listaProductos;
 
-                /*if (tipo == 0)
-                {
-                    kardices = (IEnumerable<Kardex>)await _kardexData.GetByTipo(false);
-                }
-                else if (tipo == 1)
-                {
-                    kardices = (IEnumerable<Kardex>)await _kardexData.GetByTipo(true);
-                }
-                else
-                {
-                    kardices = await _kardexData.GetAll();
-
-                }*/
-
-                foreach (Kardex kardex in kardices)
-                {
-                    kardex.Usuario = await _usuarioData.GetUsuario(kardex.IdUsuario);
-                }
-
-                const int pageSize = 9;
-
-                if (pg < 1) pg = 1;
-
-                int recsCount = kardices.Count();
-                var pager = new Pager(recsCount, pg, pageSize);
-                int recSkip = (pg - 1) * pageSize;
-                var data = kardices.Skip(recSkip).Take(pager.PageSize);
-
-                ViewBag.Pager = pager;
-
-                return View(data);
+                return View();
             }
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(Kardex kardex)
+        {
+            try
+            {
+                int IdProducto = kardex.IdProducto;
+                IEnumerable<Kardex> kardices = await _kardexData.GetByProducto(IdProducto);
+
+                Producto producto = await _productoData.GetProducto(IdProducto);
+                ViewBag.Producto = producto;
+
+                List<SelectListItem> listaProductos = ObtenerListaProductos().Result;
+                ViewBag.ListaProductos = listaProductos;
+
+                foreach (Kardex kardexp in kardices)
+                {
+                    kardexp.Usuario = await _usuarioData.GetUsuario(kardex.IdUsuario);
+                    kardexp.Producto = await _productoData.GetProducto(kardex.IdProducto);
+                }
+
+                return View(kardices);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        private async Task<List<SelectListItem>> ObtenerListaProductos()
+        {
+            IEnumerable<Producto> listaProductos = await _productoData.GetProducto();
+            List<SelectListItem> listItems = new List<SelectListItem>();
+
+            foreach (var producto in listaProductos)
+            {
+                listItems.Add(new SelectListItem
+                {
+                    Text = producto.Nombre,
+                    Value = producto.ID_Producto.ToString()
+                });
+            }
+            return listItems;
         }
     }
 }

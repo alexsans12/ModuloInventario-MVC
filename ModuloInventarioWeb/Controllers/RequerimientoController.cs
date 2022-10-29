@@ -19,8 +19,9 @@ namespace ModuloInventarioWeb.Controllers
         private readonly IUsuarioData _usuarioData;
         private readonly IMovimientoData _movimientoData;
         private readonly IDetalleMovimientoData _detalleMovientoData;
+        private readonly IKardexData _kardexData;
 
-        public RequerimientoController(IRequerimientoData requerimientoData, IDetalleRequerimientoData detalleRequerimientoData, IProductoData productoData, IUsuarioData usuarioData, IMovimientoData movimientoData, IDetalleMovimientoData detalleMovimientoData)
+        public RequerimientoController(IRequerimientoData requerimientoData, IDetalleRequerimientoData detalleRequerimientoData, IProductoData productoData, IUsuarioData usuarioData, IMovimientoData movimientoData, IDetalleMovimientoData detalleMovimientoData, IKardexData kardexData)
         {
             _requerimientoData = requerimientoData;
             _detalleRequerimientoData = detalleRequerimientoData;
@@ -28,6 +29,7 @@ namespace ModuloInventarioWeb.Controllers
             _usuarioData = usuarioData;
             _movimientoData = movimientoData;
             _detalleMovientoData = detalleMovimientoData;
+            _kardexData = kardexData;
         }
 
         public async Task<IActionResult> Index(int pg = 1)
@@ -184,6 +186,11 @@ namespace ModuloInventarioWeb.Controllers
                     }
                 }
 
+                Kardex kardex = await _kardexData.GetByIdRequerimiento(requerimiento.Id);
+
+                await _detalleMovientoData.Borrar(kardex.IdMovimiento);
+                await _movimientoData.Borrar(kardex.IdMovimiento);
+                await _kardexData.DeleteKardexReq(requerimiento.Id);
                 await _detalleRequerimientoData.Borrar(requerimiento.Id);
                 await _requerimientoData.Borrar(requerimiento.Id);
 
@@ -256,6 +263,8 @@ namespace ModuloInventarioWeb.Controllers
 
                 foreach (DetalleRequerimiento detalle in requerimiento.Detalles)
                 {
+                    Kardex kardex = new Kardex();
+
                     DetalleMovimiento detalleMovimiento = new DetalleMovimiento();
                     detalleMovimiento.IdMovimiento = idMovimiento;
                     detalleMovimiento.IdProducto = detalle.IdProducto;
@@ -263,6 +272,22 @@ namespace ModuloInventarioWeb.Controllers
                     detalleMovimiento.PrecioUnidad = detalle.PrecioUnidad;
                     detalleMovimiento.Subtotal = detalle.Subtotal;
                     await _detalleMovientoData.Insertar(detalleMovimiento);
+
+                    detalle.Producto = await _productoData.GetProducto(detalle.IdProducto);
+                    kardex.StockAnterior = detalle.Producto.Stock + detalle.Cantidad;
+                    kardex.FechaCreacion = movimiento.FechaCreacion;
+                    kardex.Motivo = movimiento.Descripcion;
+                    kardex.Cantidad = detalle.Cantidad;
+                    kardex.IdUsuario = movimiento.IdUsuario;
+                    kardex.IdProducto = detalle.IdProducto;
+                    kardex.IdMovimiento = idMovimiento;
+                    kardex.IdRequerimiento = requerimiento.Id;
+                    kardex.TipoMovimiento = movimiento.TipoMovimiento;
+                    kardex.Total = detalle.Subtotal;
+                    kardex.PrecioUnidad = detalle.PrecioUnidad;
+                    kardex.StockActual = detalle.Producto.Stock;
+
+                    await _kardexData.InsertKardex(kardex);
                 }
 
                 TempData["success"] = "Requerimiento autorizado exitosamente";

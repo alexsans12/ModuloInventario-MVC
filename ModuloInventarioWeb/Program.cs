@@ -11,7 +11,7 @@ builder.Services.AddSingleton<IDetalleMovimientoData, DetalleMovimientoData>();
 builder.Services.AddSingleton<IMovimientoData, MovimientoData>();
 builder.Services.AddSingleton<IDetalleRequerimientoData, DetalleRequerimientoData>();
 builder.Services.AddSingleton<IRequerimientoData, RequerimientoData>();
-builder.Services.AddSingleton<IKardex, KardexData>();
+builder.Services.AddSingleton<IKardexData, KardexData>();
 builder.Services.AddSingleton<ICategoriaData, CategoriaData>();
 builder.Services.AddSingleton<IUsuarioData, UsuarioData>();
 builder.Services.AddSingleton<IProductoData, ProductoData>();

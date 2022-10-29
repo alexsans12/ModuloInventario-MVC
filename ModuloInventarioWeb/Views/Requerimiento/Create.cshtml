@@ -82,7 +82,7 @@
             <partial name="_ValidationScriptsPartial" />
         }
 
-        <script>
+<script>
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
@@ -189,6 +189,7 @@
                     let item = e.target.parentNode.parentNode;
 
                     let producto = item.querySelector("#" + idItem + "__IdProducto");
+                    let cantidad = item.querySelector("#" + idItem + "__Cantidad");
                     let subtotal = item.querySelector("#" + idItem + "__Subtotal");
                     let precio = item.querySelector("#" + idItem + "__PrecioUnidad");
 
@@ -197,6 +198,7 @@
                         <text>
                             if (producto.value == @producto.ID_Producto) {
                                 precio.value = @producto.Precio;
+                                cantidad.max = @producto.Stock;
                                 subtotal.value = e.target.value * @producto.Precio;
                             }
 
@@ -219,7 +221,7 @@
                 totalItem.value = total;
             }
 
-        </script>
+</script>
 
     }
 </div>

@@ -25,7 +25,7 @@ public class Kardex
 
     public virtual Usuario? Usuario { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Selecciona un Producto")]
     [ForeignKey("Producto")]
     public int IdProducto { get; set; }
 
@@ -33,6 +33,8 @@ public class Kardex
 
     [Required]
     public int IdMovimiento { get; set; }
+
+    public int? IdRequerimiento { get; set; }
 
     [Required]
     public bool TipoMovimiento { get; set; }

@@ -49,8 +49,11 @@
                         <td class="text-center">
                             <div class="btn-group" role="group">
                                 <a class="btn btn-primary" asp-action="View" asp-route-id="@obj.Id"><i class="bi bi-eye"></i></a>
+                            @if(!obj.TipoMovimiento)
+                            {
                                 <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.Id"><i class="bi bi-pencil-square"></i></a>
                                 <a class="btn btn-warning" asp-action="Delete" asp-route-id="@obj.Id" onclick="return confirm('Estas seguro de eliminar este Movimiento?')"><i class="bi bi-trash3"></i></a>
+                            }
                             </div>
                         </td>
                     </tr>
