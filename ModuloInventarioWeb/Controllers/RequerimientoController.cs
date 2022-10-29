@@ -186,11 +186,15 @@ namespace ModuloInventarioWeb.Controllers
                     }
                 }
 
-                Kardex kardex = await _kardexData.GetByIdRequerimiento(requerimiento.Id);
+                if(requerimiento.IdUsuarioAutorizo != null)
+                {
+                    Kardex kardex = await _kardexData.GetByIdRequerimiento(requerimiento.Id);
+                    await _detalleMovientoData.Borrar(kardex.IdMovimiento);
+                    await _movimientoData.Borrar(kardex.IdMovimiento);
+                    await _kardexData.DeleteKardexReq(requerimiento.Id);
+                }
 
-                await _detalleMovientoData.Borrar(kardex.IdMovimiento);
-                await _movimientoData.Borrar(kardex.IdMovimiento);
-                await _kardexData.DeleteKardexReq(requerimiento.Id);
+
                 await _detalleRequerimientoData.Borrar(requerimiento.Id);
                 await _requerimientoData.Borrar(requerimiento.Id);
 
