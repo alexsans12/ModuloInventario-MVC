@@ -15,7 +15,8 @@ builder.Services.AddSingleton<IKardexData, KardexData>();
 builder.Services.AddSingleton<ICategoriaData, CategoriaData>();
 builder.Services.AddSingleton<IUsuarioData, UsuarioData>();
 builder.Services.AddSingleton<IProductoData, ProductoData>();
-builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+//builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option =>
