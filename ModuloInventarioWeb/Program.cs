@@ -7,11 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
-builder.Services.AddSingleton<ICategoryData, CategoryData>();
 builder.Services.AddSingleton<IDetalleMovimientoData, DetalleMovimientoData>();
 builder.Services.AddSingleton<IMovimientoData, MovimientoData>();
+builder.Services.AddSingleton<IDetalleRequerimientoData, DetalleRequerimientoData>();
+builder.Services.AddSingleton<IRequerimientoData, RequerimientoData>();
+builder.Services.AddSingleton<IKardexData, KardexData>();
 builder.Services.AddSingleton<ICategoriaData, CategoriaData>();
-builder.Services.AddSingleton<IRolData, RolData>();
 builder.Services.AddSingleton<IUsuarioData, UsuarioData>();
 builder.Services.AddSingleton<IProductoData, ProductoData>();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
@@ -20,7 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(option =>
     {
         option.LoginPath = "/Autenticacion/Index";
-        option.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(25);
         option.AccessDeniedPath = "/Autentication/Index";
     });
 

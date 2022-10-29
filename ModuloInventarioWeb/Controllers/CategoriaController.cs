@@ -16,12 +16,24 @@ namespace ModuloInventarioWeb.Controllers;
         {
             _data = data;
         }
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(int pg = 1)
         {
             try
             {
                 IEnumerable<Categoria> objCategoriaList = await _data.GetCategoria();
-                return View(objCategoriaList);
+                const int pageSize = 9;
+
+                if (pg < 1) pg = 1;
+
+                int recsCount = objCategoriaList.Count();
+                var pager = new Pager(recsCount, pg, pageSize);
+                int recSkip = (pg - 1) * pageSize;
+                var data = objCategoriaList.Skip(recSkip).Take(pager.PageSize);
+
+                ViewBag.Pager = pager;
+
+            return View(data);
             }
             catch (Exception ex)
             {
@@ -43,7 +55,7 @@ namespace ModuloInventarioWeb.Controllers;
                 if (ModelState.IsValid)
                 {
                     await _data.InsertCategoria(categoria);
-                    TempData["success"] = "Categoria created successfully";
+                    TempData["success"] = "Categoría creada exitosamente";
                     return RedirectToAction("Index");
                 }
 
@@ -85,7 +97,7 @@ namespace ModuloInventarioWeb.Controllers;
         try
         {
             await _data.UpdateCategoria(categoria);
-            TempData["success"] = "Category updated successfully";
+            TempData["success"] = "Categoría actualizada exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)
@@ -100,7 +112,7 @@ namespace ModuloInventarioWeb.Controllers;
         try
         {
             await _data.DeleteCategoria(id);
-            TempData["success"] = "Category deleted successfully";
+            TempData["success"] = "Categoría eliminada exitosamente";
             return RedirectToAction("Index");
         }
         catch (Exception ex)

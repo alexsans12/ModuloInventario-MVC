@@ -36,7 +36,7 @@ public class AutenticacionController : Controller
         {
             var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, usuario.Nombre),
-                new Claim("Id_Usuario", ""+usuario.Id_Usuario)
+                new Claim("Id_Usuario", ""+usuario.ID_Usuario)
             };
 
             claims.Add(new Claim(ClaimTypes.Role, "Admin"));
@@ -63,26 +63,29 @@ public class AutenticacionController : Controller
 
     public async Task<Usuario> Login(String usuario, String password)
     {
-        Usuario data = await _usuarioData.ObtenerPorNombre(usuario);
-
-        if (data == null)
-            return null;
-        else
+        try
         {
-            byte[] passUsuario = data.Contrasena;
-            string salt = data.Nombre.ToUpper();
-            byte[] passTemporal = HelperCryptography.EncriptarPassword(password, salt);
+            Usuario data = await _usuarioData.ObtenerPorNombre(usuario);
 
-            //data.Contrasena = passTemporal;
-            //await _usuarioData.UpdateUsuario(data);
-
-            bool respuesta = HelperCryptography.compareArrays(passUsuario, passTemporal);
-
-            if (respuesta == true)
-                return data;
-            else
-                //Contraseña incorrecta
+            if (data == null)
                 return null;
+            else
+            {
+                byte[] passUsuario = data.Contrasena;
+                string salt = data.Nombre.ToUpper();
+                byte[] passTemporal = HelperCryptography.EncriptarPassword(password, salt);
+
+                bool respuesta = HelperCryptography.compareArrays(passUsuario, passTemporal);
+
+                if (respuesta == true)
+                    return data;
+                else
+                    //Contraseña incorrecta
+                    return null;
+            }
+        } catch (Exception ex)
+        {
+            return null;
         }
     }
 }

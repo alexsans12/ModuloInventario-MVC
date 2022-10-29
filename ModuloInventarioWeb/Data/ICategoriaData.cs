@@ -6,7 +6,6 @@ namespace ModuloInventarioWeb.Data
     {
         Task<IEnumerable<Categoria>> GetCategoria();
         Task<Categoria?> GetCategoria(int ID_Categoria);
-
         Task InsertCategoria(Categoria categoria);
         Task UpdateCategoria(Categoria categoria);
         Task DeleteCategoria(int ID_Categoria);

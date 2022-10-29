@@ -15,14 +15,14 @@ public class DetalleMovimientoData : IDetalleMovimientoData
 
     public Task Actualizar(DetalleMovimiento detalleMovimiento)
     {
-        var results = _db.SaveData("SPDetalleMovimiento_Actualizar", new { detalleMovimiento.Id });
+        var results = _db.SaveData("SPDetalleMovimiento_Actualizar", new { Id_Producto = detalleMovimiento.IdProducto, detalleMovimiento.Cantidad, Precio_Unidad = detalleMovimiento.PrecioUnidad, detalleMovimiento.Subtotal });
 
         return results;
     }
 
-    public Task Borrar(int id)
+    public Task Borrar(int idMovimiento)
     {
-        var results = _db.SaveData("SPDetalleMovimiento_Borrar", new { id });
+        var results = _db.SaveData("SPDetalleMovimiento_Eliminar", new { idMovimiento });
 
         return results;
     }
@@ -34,11 +34,9 @@ public class DetalleMovimientoData : IDetalleMovimientoData
         return results;
     }
 
-    public async Task<DetalleMovimiento?> ObtenerPorId(int id)
+    public Task<IEnumerable<DetalleMovimiento>?> ObtenerPorMovimiento(int id)
     {
-        var results = await _db.LoadData<DetalleMovimiento, dynamic>("SPDetalleMovimiento_Consultar", new { id });
-
-        return results.FirstOrDefault();
+        return _db.LoadData<DetalleMovimiento, dynamic>("SPDetalleMovimiento_ObtenerPorMovimiento", new { id });
     }
 
     public Task<IEnumerable<DetalleMovimiento>> ObtenerTodos()

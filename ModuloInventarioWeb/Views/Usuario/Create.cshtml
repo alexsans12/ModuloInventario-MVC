@@ -1,31 +1,37 @@
 ﻿@model Usuario
 
+@{
+    ViewData["title"] = "Crear Usuario";
+}
 
 <div class="container p-3">
     <form class="form" method="post" asp-action="Create" enctype="multipart/form-data">
-        <div class="border p-3 mt-4">
+        <div class="border row p-3 mt-4">
             <div class="row pb-2 mb-3">
                 <h2 class="text-primary pb-2 border-bottom border-dark">Crear Usuario</h2>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-6">
                 <label asp-for="Nombre"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-person"></i></span>
+                    <input asp-for="Nombre" class="form-control" />
+                </div>
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-6">
                 <label asp-for="Contrasena">Contraseña</label>
-                <input asp-for="Contrasena" class="form-control" />
+                <input required asp-for="Contrasena" type="password" name="password" class="form-control" />
                 <span asp-validation-for="Contrasena" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-6">
                 <label asp-for="Foto_Perfil">Foto de Perfil</label>
-                <input type="file" accept="Image/*" asp-for="Foto_Perfil" class="form-control" />
+                <input  required type="file" accept="Image/*" asp-for="Foto_Perfil" class="form-control" />
                 <span asp-validation-for="Foto_Perfil" class="text-danger"></span>
-                
-
             </div>
-            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Crear</button>
-            <a asp-controller="Usuario" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar a la lista</a>
+            <div>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Crear</button>
+                <a asp-controller="Usuario" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar a la lista</a>
+            </div>
         </div>
     </form>
 

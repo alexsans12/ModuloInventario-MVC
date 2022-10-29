@@ -1,54 +1,59 @@
 ﻿@model Producto
 
 @{
+    ViewData["Title"] = "Crear Producto";
     List<SelectListItem> lista = ViewBag.ListaCategorias;
 }
 
 
 <div class="container p-3">
     <form class="form" method="post" asp-action="Create" enctype="multipart/form-data">
-        <div class="border p-3 mt-4">
+        <div class="border row p-4 mt-4">
             <div class="row pb-2 mb-3">
                 <h2 class="text-primary pb-2 border-bottom border-dark">Crear Producto</h2>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-3">
                 <label asp-for="Codigo">Código</label>
                 <input asp-for="Codigo" class="form-control" />
                 <span asp-validation-for="Codigo" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-3">
                 <label asp-for="Nombre"></label>
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Descripcion"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            <div class="mb-3 col-4">
+                <label asp-for="ID_Categoria">Categoría</label>
+                <select asp-for="ID_Categoria" asp-items="lista" class="form-select"></select>
+                <span asp-validation-for="ID_Categoria" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-2">
+                <label asp-for="Precio">Precio</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Q</span>
+                    <input type="number" min="0" asp-for="Precio" class="form-control" />
+                </div>
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-2">
                 <label asp-for="Stock"></label>
                 <input asp-for="Stock" class="form-control" />
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Precio_Entrada">Precio de Entrada</label>
-                <input asp-for="Precio_Entrada" class="form-control" />
-                <span asp-validation-for="Precio_Entrada" class="text-danger"></span>
+            <div class="mb-3 col-5">
+                <label asp-for="Descripcion"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
-          
-            <div class="mb-3">
-                <label asp-for="IDCategoria">Categoría</label>
-                <select asp-for="IDCategoria" asp-items="lista" class="form-control"></select>
-                <span asp-validation-for="IDCategoria" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
+            <div class="mb-3 col-5">
                 <label asp-for="Imagen_Producto">Imagen del Producto</label>
-                <input type="file" accept="Image/*" asp-for="Imagen_Producto" class="form-control" />
+                <input type="file" required accept="Image/*" asp-for="Imagen_Producto" class="form-control" />
                 <span asp-validation-for="Imagen_Producto" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Crear</button>
-            <a asp-controller="Producto" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar a la lista</a>
+            <div>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Crear</button>
+                <a asp-controller="Producto" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar a la lista</a>
+            </div>
         </div>
     </form>
 

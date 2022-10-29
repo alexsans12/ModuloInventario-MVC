@@ -1,6 +1,7 @@
 ﻿@model Producto
 
 @{
+    ViewData["Title"] = "Viendo Producto";
     List<SelectListItem> lista = ViewBag.ListaCategorias;
     var imgsrc = "";
 }
@@ -9,63 +10,58 @@
 
 <div class="container p-3">
     <form class="form" method="post" asp-action="View" enctype="multipart/form-data">
-        <div class="border p-3 mt-4">
+        <div class="border row p-3 mt-4">
             <div class="row pb-2 mb-3">
                 <h2 class="text-primary pb-2 border-bottom border-dark">Actualizar Producto</h2>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-3">
                 <label asp-for="Codigo">Código</label>
-                <input asp-for="Codigo" class="form-control" disabled/>
+                <input disabled asp-for="Codigo" class="form-control" />
                 <span asp-validation-for="Codigo" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-3">
                 <label asp-for="Nombre"></label>
-                <input asp-for="Nombre" class="form-control" disabled/>
+                <input disabled asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Descripcion"></label>
-                <input asp-for="Descripcion" class="form-control" disabled/>
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            <div class="mb-3 col-4">
+                <label asp-for="ID_Categoria">Categoría</label>
+                <select disabled asp-for="ID_Categoria" asp-items="lista" class="form-select"></select>
+                <span asp-validation-for="ID_Categoria" class="text-danger"></span>
             </div>
-            <div class="mb-3">
+            <div class="mb-3 col-2">
+                <label asp-for="Precio">Precio</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Q</span>
+                    <input disabled asp-for="Precio" class="form-control" />
+                </div>
+                <span asp-validation-for="Precio" class="text-danger"></span>
+            </div>
+            <div class="mb-3 col-2">
                 <label asp-for="Stock"></label>
-                <input asp-for="Stock" class="form-control" disabled />
+                <input disabled asp-for="Stock" class="form-control" />
                 <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="Precio_Entrada">Precio de Entrada</label>
-                <input asp-for="Precio_Entrada" class="form-control" disabled/>
-                <span asp-validation-for="Precio_Entrada" class="text-danger"></span>
+            <div class="mb-3 col-5">
+                <label asp-for="Descripcion"></label>
+                <input disabled asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="IDCategoria">Categoría</label>
-                <select asp-for="IDCategoria" asp-items="lista" class="form-control" disabled></select>
-                <span asp-validation-for="IDCategoria" class="text-danger"></span>
-            </div>
-           
             @if (@Model.Imagen_Producto != null)
             {
-
-            var base64 = Convert.ToBase64String(@Model.Imagen_Producto);
-            imgsrc = String.Format("data:image/jpeg;base64,{0}", base64);
+                var base64 = Convert.ToBase64String(@Model.Imagen_Producto);
+                imgsrc = String.Format("data:image/jpeg;base64,{0}", base64);
             }
-
-            <div class="mb-3">
+            <div class="mb-3 row col-6">
                 <label asp-for="Imagen_Producto">Imagen del Producto</label>
-                <img style="max-width:400px" src="@imgsrc">
+                <img style="max-width: 50%" src="@imgsrc">
                 <span asp-validation-for="Imagen_Producto" class="text-danger"></span>
             </div>
-            <input asp-for="ID_Producto" type="hidden" class="form-control" />
-           
-            <a asp-controller="Producto" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar a la lista</a>
+            <div>
+                <a asp-controller="Producto" asp-action="Edit" asp-route-id="@Model.ID_Producto" class="btn btn-success"><i class="bi bi-pencil-square"></i> Editar</a>
+                <a asp-controller="Producto" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar a la lista</a>
+            </div>
         </div>
     </form>
-
-    @section Scripts {
-        @{
-            <partial name="_ValidationScriptsPartial" />
-        }
-    }
     </div>

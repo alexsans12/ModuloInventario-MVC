@@ -1,6 +1,15 @@
 ﻿@model IEnumerable<Producto>
+
 @{
     ViewData["Title"] = "Listado de Productos";
+
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
 }
 <div class="container p-3">
     <div class="row pt-4 mb-5">
@@ -11,49 +20,83 @@
             <a asp-controller="Producto" asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> &nbsp; Crear una nuevo producto</a>
         </div>
     </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Código</th>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Stock</th>
+                    <th>Precio</th>
+                    <th>Imagen del Producto</th>
+                    <th></th>
 
-                <th>Nombre</th>
-                <th>Stock</th>
-                <th>Precio</th>
-                <th>Imagen del Producto</th>
-                <th></th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var obj in Model)
-            {
-                var imgsrc = "";
-                if (obj.Imagen_Producto != null)
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
                 {
+                    var imgsrc = "";
+                    if (obj.Imagen_Producto != null)
+                    {
 
-                    var base64 = Convert.ToBase64String(obj.Imagen_Producto);
-                    imgsrc = String.Format("data:image/jpeg;base64,{0}", base64);
+                        var base64 = Convert.ToBase64String(obj.Imagen_Producto);
+                        imgsrc = String.Format("data:image/jpeg;base64,{0}", base64);
+                    }
+
+
+
+                    <tr>
+                        <td style="width=30%">@obj.Codigo</td>
+                        <td style="width=30%">@obj.Nombre</td>
+                        <td style="width=30%">@obj.Stock</td>
+                        <td style="width=30%">@obj.Precio</td>
+
+                        <td style="width=50%"><img style="max-width:150px" src="@imgsrc"></td>
+                        <td class="text-center">
+                            <div class="w-75 btn-group" role="group">
+                                <a class="btn btn-primary" asp-action="View" asp-route-id="@obj.ID_Producto"><i class="bi bi-eye"></i> </a>
+                                <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Producto"><i class="bi bi-pencil-square"></i> </a>
+                                <a class="btn btn-warning" onclick="return confirm('Estas seguro de eliminar este Producto?')" asp-action="Delete" asp-route-id="@obj.ID_Producto"><i class="bi bi-trash3"></i> </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="container">
+        @if (pager.TotalPages > 0)
+        {
+            <ul class="pagination justify-content-end">
+                @if (pager.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Producto" asp-action="Index" asp-route-pg="1"><i class="bi bi-chevron-double-left"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Producto" asp-action="Index" asp-route-pg="@(pager.CurrentPage - 1)"><i class="bi bi-chevron-left"></i></a>
+                    </li>
                 }
 
+                @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                {
+                    <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-controller="Producto" asp-action="Index" asp-route-pg="@pge">@pge</a>
+                    </li>
+                }
 
-
-                <tr>
-                    <td style="width=30%">@obj.Codigo</td>
-                    <td style="width=30%">@obj.Nombre</td>
-                    <td style="width=30%">@obj.Stock</td>
-                    <td style="width=30%">@obj.Precio_Entrada</td>
-
-                    <td style="width=50%"><img style="max-width:150px" src="@imgsrc"></td>
-                    <td class="text-center">
-                        <div class="w-75 btn-group" role="group">
-                            <a class="btn btn-success" asp-action="Edit" asp-route-id="@obj.ID_Producto"><i class="bi bi-pencil-square"></i> </a>
-                            <a class="btn btn-warning" asp-action="Delete" asp-route-id="@obj.ID_Producto"><i class="bi bi-trash3"></i> </a>
-                            <a class="btn btn-primary" asp-action="View" asp-route-id="@obj.ID_Producto"><i class="bi bi-eye"></i> </a>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                @if (pager.CurrentPage < pager.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Producto" asp-action="Index" asp-route-pg="@(pager.CurrentPage + 1)"><i class="bi bi-chevron-right"></i></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Producto" asp-action="Index" asp-route-pg="@(pager.TotalPages)"><i class="bi bi-chevron-double-right"></i></a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
 </div>

@@ -18,7 +18,7 @@ public class UsuarioData : IUsuarioData
         return _db.LoadData<Usuario, dynamic>("SPUsuario_GetAll", new { });
     }
 
-    public async Task<Usuario?> GetUsuario(int Id)
+    public async Task<Usuario?> GetUsuario(int ID_Usuario)
     {
         var results = await _db.LoadData<Usuario, dynamic>("SPUsuario_GetById", new { ID_Usuario });
 

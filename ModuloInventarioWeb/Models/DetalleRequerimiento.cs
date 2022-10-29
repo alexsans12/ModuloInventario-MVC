@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModuloInventarioWeb.Models;
 
-public class DetalleMovimiento
+public class DetalleRequerimiento
 {
     [Required]
-    [ForeignKey("Movimiento")]
-    public int IdMovimiento { get; set; }
+    [ForeignKey("Requerimiento")]
+    public int IdRequerimiento { get; set; }
 
     [Required]
     [ForeignKey("Producto")]
@@ -25,4 +25,3 @@ public class DetalleMovimiento
 
     public virtual Producto? Producto { get; set; }
 }
-

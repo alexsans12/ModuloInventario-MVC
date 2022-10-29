@@ -54,6 +54,5 @@ public class HelperCryptography
         }
         sha.Clear();
         return salida;
-
     }
 }

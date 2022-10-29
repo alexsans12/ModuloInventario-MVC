@@ -1,77 +1,79 @@
-﻿@model Movimiento
+﻿@model Requerimiento
 
 @{
-    ViewData["Title"] = "Crear nuevo movimiento";
+    ViewData["Title"] = "Crear un requerimiento";
     IEnumerable<Producto> productos = ViewBag.Productos;
     List<SelectListItem> lista = ViewBag.ListaProductos;
 }
 
 <div class="container col-10 p-3">
-    <h2 class="display-4 text-primary">Crear Movimiento</h2>
-    <form class="form mt-4" id="formulario" method="post" asp-action="Crear">
+    <h2 class="display-4 text-primary">Crear Requerimiento</h2>
+    <form class="form mt-4" id="formulario" method="post" asp-action="Create">
         <div class="row">
             <div class="col-6 mb-3">
-                <label class="form-label">Tipo de Movimiento: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Para crear un movimiento de salida debe realizar un requerimiento hacia el inventario"><i class="bi bi-question-circle"></i></a></label>
-                <input class="form-control" value="Entrada" disabled class="form-control" />
+                <label class="form-label">Tipo de Movimiento: <a href="#" class="text-info" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Para crear un movimiento de entrada debe dirigirse a movimientos"><i class="bi bi-question-circle"></i></a></label>
+                <input class="form-control" value="Salida" disabled class="form-control" />
             </div>
             <div class="col-6 mb-3">
-                <label class="form-label" asp-for="Descripcion">Descripcion: <a href="#" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Agrege una breve descripcion del motivo de la entrada al inventario"><i class="bi bi-question-circle"></i></a></label>
-                <input class="form-control" asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                <label class="form-label" asp-for="Motivo">Motivo: <a href="#" class="text-info" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Escriba el motivo de la salida del producto del inventario"><i class="bi bi-question-circle"></i></a></label>
+                <input class="form-control" asp-for="Motivo" class="form-control" />
+                <span asp-validation-for="Motivo" class="text-danger"></span>
             </div>
-            <div class="row justify-content-between mt-3">
-                <h3 class="col-auto" class="mt-3">Productos</h3>
+            <div class="row justify-content-between mt-3 pe-0">
+                <h3 class="col-auto mt-3">Productos <a href="#" class="text-info fs-6" data-bs-placement="right" data-bs-toggle="tooltip" data-bs-title="Para añadir un producto nuevo debe dirigirse al apartado de Productos"><i class="bi bi-question-circle"></i></a></h3>
                 <button type="button" onclick="AddItem(this)" id="add" class="col-auto btn btn-success"><i class="bi bi-plus-circle"></i> Agregar</button>
             </div>
-            <table id="productos" class="table table-bordered table-striped mt-3 mb-0">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
-                        <th>Precio Unidad</th>
-                        <th>Subtotal</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.Detalles.Count; i++)
-                    {
-
+            <div class="table-responsive">
+                <table id="productos" class="table table-bordered table-striped mt-3 mb-0">
+                    <thead>
                         <tr>
-                            <td>
-                                <select asp-for="@Model.Detalles[i].IdProducto" asp-items="lista" class="form-select">
-                                    <option disabled selected>--- Seleccione un producto ---</option>
-                                </select>
-                                <span asp-validation-for="@Model.Detalles[i].IdProducto" class="text-danger"></span>
-                            </td>
-                            <td>
-                                <input asp-for="@Model.Detalles[i].Cantidad" type="number" min="1" max="50" step="1" class="form-control" value="1" />
-                                <span asp-validation-for="@Model.Detalles[i].Cantidad" class="text-danger"></span>
-                            </td>
-                            <td><input class="form-control" readonly type="number" asp-for="@Model.Detalles[i].PrecioUnidad" /></td>
-                            <td><input class="form-control" readonly type="number" asp-for="@Model.Detalles[i].Subtotal" /></td>
-                            <td class="text-center">
-                                <button type="button" id="delete-@i-btn" class="btn btn-warning borrar" onclick="deleteItem(this)"><i class="bi bi-trash3"></i></button>
-                            </td>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unidad</th>
+                            <th>Subtotal</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-            <table class="table table-bordered">
-                <tr>
-                    <td class="w-50 text-end">Total:</td>
-                    <td class="text-end pe-4">
-                        <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1">Q</span>
-                            <input id="total" readonly asp-for="@Model.Total" class="form-control" type="number" />
-                        </div>
-                    </td>
-                </tr>
-            </table>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Detalles.Count; i++)
+                        {
+
+                            <tr>
+                                <td>
+                                    <select asp-for="@Model.Detalles[i].IdProducto" asp-items="lista" class="form-select">
+                                        <option disabled selected>--- Seleccione un producto ---</option>
+                                    </select>
+                                    <span asp-validation-for="@Model.Detalles[i].IdProducto" class="text-danger"></span>
+                                </td>
+                                <td>
+                                    <input asp-for="@Model.Detalles[i].Cantidad" type="number" min="1" step="1" class="form-control" value="1" />
+                                    <span asp-validation-for="@Model.Detalles[i].Cantidad" class="text-danger"></span>
+                                </td>
+                                <td><input class="form-control" readonly type="number" asp-for="@Model.Detalles[i].PrecioUnidad" /></td>
+                                <td><input class="form-control" readonly type="number" asp-for="@Model.Detalles[i].Subtotal" /></td>
+                                <td class="text-center">
+                                    <button type="button" id="delete-@i-btn" class="btn btn-warning borrar" onclick="deleteItem(this)"><i class="bi bi-trash3"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="w-50 text-end">Total:</td>
+                        <td class="text-end pe-4">
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1">Q</span>
+                                <input id="total" readonly asp-for="@Model.Total" class="form-control" type="number" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <div>
-            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Create</button>
-            <a asp-controller="Movimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Back to List</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Crear</button>
+            <a asp-controller="Requerimiento" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Regresar</a>
         </div>
     </form>
 
@@ -80,7 +82,7 @@
             <partial name="_ValidationScriptsPartial" />
         }
 
-        <script>
+<script>
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
@@ -100,13 +102,18 @@
                 newRow.innerHTML = rowOuterHtml;
 
                 let x = document.getElementsByTagName("INPUT");
+                let y = document.getElementsByTagName("SELECT");
+
+                for (let cnt = 0; cnt < y.length; cnt++) {
+                    if (y[cnt].id.indexOf('_' + nextRowId + '_') > 0) y[cnt].selectedIndex = 0;
+                }
 
                 for (let cnt = 0; cnt < x.length; cnt++) {
-                    if (x[cnt].type == "text" && x[cnt].id.indexOf('_' + nextRowId + '_') > 0) {
-                        if (x[cnt].id.indexOf('Subtotal') == 0)
-                            x[cnt].value = '';
-                    } else if (x[cnt].type == "number" && x[cnt].id.indexOf('_' + nextRowId + '_') > 0) {
-                        x[cnt].value = 1;
+                    if (x[cnt].type == "number" && x[cnt].id.indexOf('_' + nextRowId + '_') > 0) {
+                        if (x[cnt].id.indexOf('Subtotal') > 0 || x[cnt].id.indexOf('PrecioUnidad') > 0)
+                            x[cnt].value = 0;
+                        else
+                            x[cnt].value = 1;
 
                     }
                 }
@@ -169,6 +176,7 @@
                         <text>
                             if (producto.value == @producto.ID_Producto) {
                                 precio.value = @producto.Precio;
+                                cantidad.max = @producto.Stock;
                                 subtotal.value = cantidad.value * @producto.Precio;
                             }
 
@@ -181,6 +189,7 @@
                     let item = e.target.parentNode.parentNode;
 
                     let producto = item.querySelector("#" + idItem + "__IdProducto");
+                    let cantidad = item.querySelector("#" + idItem + "__Cantidad");
                     let subtotal = item.querySelector("#" + idItem + "__Subtotal");
                     let precio = item.querySelector("#" + idItem + "__PrecioUnidad");
 
@@ -189,6 +198,7 @@
                         <text>
                             if (producto.value == @producto.ID_Producto) {
                                 precio.value = @producto.Precio;
+                                cantidad.max = @producto.Stock;
                                 subtotal.value = e.target.value * @producto.Precio;
                             }
 
@@ -205,13 +215,13 @@
                 let total = 0;
 
                 subtotales.forEach((item, index) => {
-                    total += parseFloat(item.value);    
+                    total += parseFloat(item.value);
                 });
 
                 totalItem.value = total;
             }
-            
-        </script>
-        
+
+</script>
+
     }
 </div>
